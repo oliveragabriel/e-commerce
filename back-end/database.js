@@ -1,5 +1,5 @@
 const pg = require('pg')
-const database = new pg.Client('postgres://ipyveyzy:wf3SgnN5jbzEi9-F7S4dXPWcfn1rgRDT@babar.db.elephantsql.com/ipyveyzy')
+const database = new pg.Client(process.env.DATABASE_URL)
 
 database.connect((erro) => {
   if (erro) {
