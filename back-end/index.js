@@ -3,7 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const database = require('./database')
-const port = process.env.DATABASE_URL
+const port = process.env.PORT
 
 const app = express()
 app.use(bodyParser.json())
