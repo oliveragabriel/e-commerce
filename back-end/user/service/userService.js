@@ -18,6 +18,15 @@ exports.getUserById = (idUsuario) => {
     });
 };
 
+exports.postAddNewUser = (nome, sobrenome, atribuicao, senha) => {
+  const values = [nome, sobrenome, atribuicao, senha];
+  return database.query(userQueries.postAddNewUser, values)
+    .then((result) => result.rows)
+    .catch((error) => {
+      throw error;
+    });
+};
+
 exports.getUserContact = (idUsuario) => {
   const values = [idUsuario];
   return database.query(userQueries.getUserContactQuery, values)

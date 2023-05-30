@@ -6,3 +6,4 @@ exports.getUserContactQuery = 'SELECT contato.ddd, contato.numero, contato.email
 
 exports.getUserAddressQuery = 'SELECT endereco.rua, endereco.numero, endereco.complemento, endereco.bairro, endereco.cidade, estado.nome, estado.sigla, pais.nome, pais.sigla FROM endereco INNER JOIN usuario ON usuario.id = endereco.id_usuario LEFT JOIN estado ON estado.id = endereco.estado LEFT JOIN pais ON pais.id = endereco.pais WHERE usuario.id = $1';
 
+exports.postAddNewUser = 'INSERT INTO usuario( nome, sobrenome, atribuicao, senha) VALUES ( $1, $2, $3, $4 );';

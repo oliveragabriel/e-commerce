@@ -22,6 +22,18 @@ exports.getUserById = (req, res) => {
     });
 };
 
+exports.postAddNewUser = (req, res) => {
+  const { nome, sobrenome, atribuicao, senha } = req.body
+
+  userService.postAddNewUser(nome, sobrenome, atribuicao, senha)
+    .then((result) => {
+      res.status(200).send({ result });
+    })
+    .catch((error) => {
+      res.status(500).send({ error });
+    });
+};
+
 exports.getUserContact = (req, res) => {
   const idUsuario = req.params.idUsuario;
 

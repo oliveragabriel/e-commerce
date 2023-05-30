@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get('/list-assignment', userController.listUserAssignments);
 router.get('/:idUsuario', userController.getUserById);
+router.post('/:idUsuario', userController.postAddNewUser);
 router.get('/:idUsuario/contact', userController.getUserContact);
 router.get('/:idUsuario/address', userController.getUserAddress);
 
