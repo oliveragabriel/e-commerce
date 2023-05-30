@@ -1,7 +1,7 @@
-const stateService = require('../services/stateService');
+const countryService = require('../service/countryService');
 
-exports.listState = (_, res) => {
-  stateService.listAllStates()
+exports.listCountry = (_, res) => {
+  countryService.listAllCountries()
     .then((result) => {
       res.status(200).send({ result });
     })

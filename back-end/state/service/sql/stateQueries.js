@@ -1,0 +1,1 @@
+exports.listAllStatesQuery = 'SELECT * FROM estado';

@@ -1,9 +1,19 @@
-const userService = require('../../services/user/userService');
+const userService = require('../service/userService');
+
+exports.listUserAssignments = (_, res) => {
+  userService.listAllAssignments()
+    .then((result) => {
+      res.status(200).send({ result });
+    })
+    .catch((error) => {
+      res.status(500).send({ error });
+    });
+};
 
 exports.getUserById = (req, res) => {
-  const userId = req.params.idUsuario;
+  const idUsuario = req.params.idUsuario;
 
-  userService.getUserById(userId)
+  userService.getUserById(idUsuario)
     .then((result) => {
       res.status(200).send({ result });
     })
@@ -13,9 +23,9 @@ exports.getUserById = (req, res) => {
 };
 
 exports.getUserContact = (req, res) => {
-  const userId = req.params.idUsuario;
+  const idUsuario = req.params.idUsuario;
 
-  userService.getUserContact(userId)
+  userService.getUserContact(idUsuario)
     .then((result) => {
       res.status(200).send({ result });
     })
@@ -25,9 +35,9 @@ exports.getUserContact = (req, res) => {
 };
 
 exports.getUserAddress = (req, res) => {
-  const userId = req.params.idUsuario;
+  const idUsuario = req.params.idUsuario;
 
-  userService.getUserAddress(userId)
+  userService.getUserAddress(idUsuario)
     .then((result) => {
       res.status(200).send({ result });
     })
