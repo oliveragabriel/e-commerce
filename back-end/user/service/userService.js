@@ -27,9 +27,27 @@ exports.postAddNewUser = (nome, sobrenome, atribuicao, senha) => {
     });
 };
 
+exports.deleteUserById = (idUsuario) => {
+  const values = [idUsuario];
+  return database.query(userQueries.deleteUserByIdQuery, values)
+    .then((result) => result.rows)
+    .catch((error) => {
+      throw error;
+    });
+};
+
 exports.getUserContact = (idUsuario) => {
   const values = [idUsuario];
   return database.query(userQueries.getUserContactQuery, values)
+    .then((result) => result.rows)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+exports.postAddNewContact = (ddd, numero, email, idUsuario) => {
+  const values = [ddd, numero, email, idUsuario];
+  return database.query(userQueries.postAddNewUser, values)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;

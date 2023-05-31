@@ -26,8 +26,20 @@ exports.postAddNewUser = (req, res) => {
   const { nome, sobrenome, atribuicao, senha } = req.body
 
   userService.postAddNewUser(nome, sobrenome, atribuicao, senha)
-    .then((result) => {
-      res.status(200).send({ result });
+    .then(() => {
+      res.status(200).send({ message: 'Usuário cadastrado com sucesso!' });
+    })
+    .catch((error) => {
+      res.status(500).send({ error });
+    });
+};
+
+exports.deleteUserById = (req, res) => {
+  const idUsuario = req.params.idUsuario;
+
+  userService.deleteUserById(idUsuario)
+    .then(() => {
+      res.status(200).send({ message: 'Usuário deletado com sucesso!' });
     })
     .catch((error) => {
       res.status(500).send({ error });
@@ -40,6 +52,18 @@ exports.getUserContact = (req, res) => {
   userService.getUserContact(idUsuario)
     .then((result) => {
       res.status(200).send({ result });
+    })
+    .catch((error) => {
+      res.status(500).send({ error });
+    });
+};
+
+exports.postAddNewContact = (req, res) => {
+  const { ddd, numero, email, idUsuario } = req.body
+
+  userService.postAddNewContact(ddd, numero, email, idUsuario)
+    .then(() => {
+      res.status(200).send({ message: 'Contato cadastrado com sucesso!' });
     })
     .catch((error) => {
       res.status(500).send({ error });

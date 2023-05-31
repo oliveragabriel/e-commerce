@@ -3,6 +3,6 @@ const stateController = require('../controller/stateController');
 
 const router = express.Router();
 
-router.get('/list', stateController.listAllStates);
+router.get('/list', stateController.listState);
 
 module.exports = router;

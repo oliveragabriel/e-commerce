@@ -1,5 +1,5 @@
 const database = require('../../database');
-const productQueries = require('./sql/stateQueries');
+const productQueries = require('./sql/productQueries');
 
 exports.listAllTypes = () => {
   return database.query(productQueries.listAllTypes)
