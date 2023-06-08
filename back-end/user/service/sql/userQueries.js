@@ -4,7 +4,7 @@ exports.getUserByIdQuery = 'SELECT * FROM usuario WHERE id = $1';
 
 exports.postAddNewUserQuery = 'INSERT INTO usuario( nome, sobrenome, atribuicao, senha) VALUES ( $1, $2, $3, $4 );';
 
-exports.putEditUserByIdQuery = 'UPDATE usuario SET nome = $1, sobr) VALUES( $1, $2, $3, $4, $5, $6 )enome = $2, dt_nascimento = $3, cpf = $4, nacionalidade = $5, senha = $6 WHERE id_usuario = $7;'
+exports.putEditUserByIdQuery = 'UPDATE usuario SET nome = $1, sobrenome = $2, dt_nascimento = $3, cpf = $4, nacionalidade = $5, senha = $6 WHERE id = $7;'
 
 exports.deleteUserByIdQuery = 'DELETE FROM usuario WHERE id = $1';
 
