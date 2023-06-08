@@ -121,7 +121,6 @@ exports.getUserAddress = (req, res) => {
     });
 };
 
-
 exports.postAddNewAddress = (req, res) => {
   const { rua, numero, complemento, bairro, cidade, idEstado, idPais } = req.body
   const { idUsuario } = req.params
@@ -134,7 +133,6 @@ exports.postAddNewAddress = (req, res) => {
       res.status(500).send({ error });
     });
 };
-
 
 exports.putEditAddressById = (req, res) => {
   const { rua, numero, complemento, bairro, cidade, idEstado, idPais } = req.body
