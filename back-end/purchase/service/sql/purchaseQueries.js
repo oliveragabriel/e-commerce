@@ -1,0 +1,1 @@
+exports.listPurchaseByUserId = 'SELECT * FROM compras WHERE comprador = $1';

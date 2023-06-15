@@ -8,11 +8,13 @@ app.use(bodyParser.json())
 
 const userRoutes = require('./user/routes/userRoutes');
 const productRoutes = require('./product/routes/productRoutes');
+const purchaseRoutes = require('./purchase/routes/purchaseRoutes');
 const countryRoutes = require('./country/routes/countryRoutes');
 const stateRoutes = require('./state/routes/stateRoutes');
 
 app.use('/user', userRoutes);
 app.use('/product', productRoutes);
+app.use('/purchase', purchaseRoutes);
 app.use('/country', countryRoutes);
 app.use('/state', stateRoutes);
 
