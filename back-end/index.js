@@ -12,11 +12,11 @@ const purchaseRoutes = require('./purchase/routes/purchaseRoutes');
 const countryRoutes = require('./country/routes/countryRoutes');
 const stateRoutes = require('./state/routes/stateRoutes');
 
-app.use('/user', userRoutes);
-app.use('/product', productRoutes);
-app.use('/purchase', purchaseRoutes);
-app.use('/country', countryRoutes);
-app.use('/state', stateRoutes);
+app.use('/usuario', userRoutes);
+app.use('/produto', productRoutes);
+app.use('/compras', purchaseRoutes);
+app.use('/pais', countryRoutes);
+app.use('/estado', stateRoutes);
 
 app.listen(port, () => {
   console.log(`API EXECUTANDO - PORTA: ${port}`)

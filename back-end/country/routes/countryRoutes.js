@@ -3,6 +3,6 @@ const countryController = require('../controller/countryController');
 
 const router = express.Router();
 
-router.get('/list', countryController.listCountry);
+router.get('/', countryController.listCountry);
 
 module.exports = router;
