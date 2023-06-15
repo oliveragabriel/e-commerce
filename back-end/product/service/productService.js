@@ -2,7 +2,7 @@ const database = require('../../database');
 const productQueries = require('./sql/productQueries');
 
 exports.listAllTypes = () => {
-  return database.query(productQueries.listAllTypes)
+  return database.query(productQueries.listAllTypesQuery)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;
@@ -49,7 +49,7 @@ exports.deleteProductById = async (idProduto) => {
 exports.getProductsFilteredByType = (idTipo) => {
   const values = [idTipo];
 
-  return database.query(productQueries.getProductsFilteredByType, values)
+  return database.query(productQueries.getProductsFilteredByTypeQuery, values)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;
@@ -59,7 +59,7 @@ exports.getProductsFilteredByType = (idTipo) => {
 exports.getProductsFilteredByName = (nomeProduto) => {
   const values = [nomeProduto];
 
-  return database.query(productQueries.getProductsFilteredByName, values)
+  return database.query(productQueries.getProductsFilteredByNameQuery, values)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;

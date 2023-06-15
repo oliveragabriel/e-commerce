@@ -8,6 +8,6 @@ exports.putEditProductByIdQuery = 'UPDATE produto SET nome = $1, descricao = $2,
 
 exports.deleteProductByIdQuery = 'DELETE FROM produto WHERE id = $1';
 
-exports.getProductsFilteredByName = 'SELECT * FROM produto WHERE nome LIKE $1'
+exports.getProductsFilteredByNameQuery = 'SELECT * FROM produto WHERE nome LIKE $1'
 
-exports.getProductsFilteredByType = 'SELECT * FROM produto WHERE tipo = $1'
+exports.getProductsFilteredByTypeQuery = 'SELECT * FROM produto WHERE tipo = $1'
