@@ -34,7 +34,6 @@ exports.postAddNewProduct = (req, res) => {
     });
 };
 
-
 exports.putEditProductById = (req, res) => {
   const { nome, descricao, tipo, valor } = req.body
   const { idProduto } = req.params
@@ -54,6 +53,31 @@ exports.deleteProductById = (req, res) => {
   userService.deleteProductById(idProduto)
     .then(() => {
       res.status(200).send({ message: 'Produto deletado com sucesso!' });
+    })
+    .catch((error) => {
+      res.status(500).send({ error });
+    });
+};
+
+exports.getProductsFilteredByType  = (req, res) => {
+  const idTipo = req.params.idTipo;
+
+  productService.getProductsFilteredByType(idTipo)
+    .then((result) => {
+      res.status(200).send({ result });
+    })
+    .catch((error) => {
+      res.status(500).send({ error });
+    });
+};
+
+exports.getProductsFilteredByName = (req, res) => {
+  const { nome } = req.body
+  const nomeProduto = `%${nome}%`
+
+  productService.getProductsFilteredByName(nomeProduto)
+    .then((result) => {
+      res.status(200).send({ result });
     })
     .catch((error) => {
       res.status(500).send({ error });

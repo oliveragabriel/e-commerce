@@ -45,3 +45,23 @@ exports.deleteProductById = async (idProduto) => {
       throw error;
     });
 };
+
+exports.getProductsFilteredByType = (idTipo) => {
+  const values = [idTipo];
+
+  return database.query(productQueries.getProductsFilteredByType, values)
+    .then((result) => result.rows)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+exports.getProductsFilteredByName = (nomeProduto) => {
+  const values = [nomeProduto];
+
+  return database.query(productQueries.getProductsFilteredByName, values)
+    .then((result) => result.rows)
+    .catch((error) => {
+      throw error;
+    });
+};
