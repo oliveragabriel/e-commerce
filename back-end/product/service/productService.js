@@ -12,7 +12,7 @@ exports.listAllTypes = () => {
 exports.getProductById = (idProduto) => {
   const values = [idProduto];
 
-  return database.query(productQueries.getProductById, values)
+  return database.query(productQueries.getProductByIdQuery, values)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;
