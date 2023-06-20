@@ -1,0 +1,1 @@
+exports.validateUserToLoginQuery = 'SELECT true FROM usuario WHERE id = $1 AND senha = $2';
