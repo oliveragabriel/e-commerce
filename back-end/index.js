@@ -2,8 +2,10 @@ require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const port = process.env.PORT
+const cors = require('cors');
 
 const app = express()
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(bodyParser.json())
 
 const userRoutes = require('./user/routes/userRoutes');
