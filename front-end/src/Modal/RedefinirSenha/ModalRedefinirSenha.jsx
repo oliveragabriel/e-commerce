@@ -1,14 +1,16 @@
 import { useState, useCallback } from 'react'
-import { Row, Col, Form, Input, Modal } from 'antd'
+import { Row, Col, Modal, Form, Input, message } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
 import PropTypes from 'prop-types'
 
-export const ModalRedefinirSenha = ({ visible, closeFn }) => {
+export const ModalRedefinirSenha = ({ visible, closeFn, openLg }) => {
   const [form] = Form.useForm()
+  const [messageApi, contextHolder] = message.useMessage()
+
   const [loading, setLoading] = useState(false)
 
   const handleCancel = useCallback(() => {
-    closeFn(false)
+    closeFn()
     form.resetFields()
   }, [closeFn, form])
 
@@ -17,13 +19,15 @@ export const ModalRedefinirSenha = ({ visible, closeFn }) => {
       setLoading(true)
       const values = await form.validateFields()
       console.log(values)
+      messageApi.success('')
       handleCancel()
+      openLg()
     } catch (error) {
       console.log(error)
     } finally {
       setLoading(false)
     }
-  },[form, handleCancel])
+  },[form, handleCancel, messageApi, openLg])
 
   return (
     <Modal
@@ -36,6 +40,7 @@ export const ModalRedefinirSenha = ({ visible, closeFn }) => {
       onCancel={handleCancel}
       cancelButtonProps={{ style: { display: 'none' } }}
     >
+      {contextHolder}
       <Form form={form} layout='vertical' size='middle'> 
         <Row>
           <Col span={24}>
@@ -65,5 +70,6 @@ export const ModalRedefinirSenha = ({ visible, closeFn }) => {
 
 ModalRedefinirSenha.propTypes = {
   visible: PropTypes.bool.isRequired,
-  closeFn: PropTypes.func.isRequired
+  closeFn: PropTypes.func.isRequired,
+  openLg: PropTypes.func.isRequired
 }

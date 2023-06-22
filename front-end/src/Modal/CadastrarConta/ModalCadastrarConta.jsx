@@ -1,11 +1,12 @@
 import { useCallback, useState } from 'react'
-import { Row, Col, Form, Modal, Input } from 'antd'
+import { Row, Col, Modal, Form, Input, message } from 'antd'
 import { MailOutlined, UserOutlined, UserAddOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 
-export const ModalCadastrarConta = ({ visible, closeFn }) => {
+export const ModalCadastrarConta = ({ visible, closeFn, openLg }) => {
   const [form] = Form.useForm()
+  const [messageApi, contextHolder] = message.useMessage()
   const [loading, setLoading] = useState(false)
 
   const handleCancel = useCallback(() => {
@@ -17,17 +18,17 @@ export const ModalCadastrarConta = ({ visible, closeFn }) => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      // eslint-disable-next-line no-unused-vars
-      const { confirmarSenha, ...rest } = values
-      const newUser = { ...rest, atribuicao: 2 }
-      const response = await axios.post('http://localhost:3003/usuario/', newUser)
-      console.log(response)
+      const { senha, nome, sobrenome, email } = values
+      const response = await axios.post('http://localhost:3003/usuario/', { senha, nome, sobrenome, email })
+      messageApi.success(response.data.message)
+      closeFn()
+      openLg()
     } catch (error) {
-      console.log(error)
+      messageApi.error(error)
     } finally {
       setLoading(false)
     }
-  }, [form])
+  }, [closeFn, form, messageApi, openLg])
 
   return (
     <Modal
@@ -40,6 +41,7 @@ export const ModalCadastrarConta = ({ visible, closeFn }) => {
       onCancel={handleCancel}
       cancelButtonProps={{ style: { display: 'none' } }}
     >
+      {contextHolder}
       <Form 
         form={form} 
         layout='vertical' 
@@ -191,5 +193,6 @@ export const ModalCadastrarConta = ({ visible, closeFn }) => {
 
 ModalCadastrarConta.propTypes = {
   visible: PropTypes.bool.isRequired,
-  closeFn: PropTypes.func.isRequired
+  closeFn: PropTypes.func.isRequired,
+  openLg: PropTypes.func.isRequired
 }

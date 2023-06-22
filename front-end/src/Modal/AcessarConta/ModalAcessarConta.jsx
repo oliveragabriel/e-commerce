@@ -3,14 +3,15 @@ import { Row, Col, Modal, Form, Button, Input } from 'antd'
 import { MailOutlined, LockOutlined, UserAddOutlined, UserSwitchOutlined } from '@ant-design/icons'
 import { ModalCadastrarConta } from '../CadastrarConta/ModalCadastrarConta'
 import { ModalRedefinirSenha } from '../RedefinirSenha/ModalRedefinirSenha'
+import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 
-export const ModalAcessarConta = ({ visible, closeFn }) => {
+export const ModalAcessarConta = ({ visible, closeFn, openLg }) => {
   const [form] = Form.useForm()
+  const { setUsuario } = useControleUsuarioContext()
 
   const [loading, setLoading] = useState(false)
-  const [usuario, setUsuario] = useState()
   const [exibirTelaParaRedefinirSenha, setExibirTelaParaRedefinirSenha] = useState(false)
   const [exibirTelaParaCadastrarConta, setExibirTelaParaCadastrarConta] = useState(false)
 
@@ -31,7 +32,7 @@ export const ModalAcessarConta = ({ visible, closeFn }) => {
     } finally {
       setLoading(false)
     }
-  }, [form, handleCancel])
+  }, [form, handleCancel, setUsuario])
 
   return (
     <Modal
@@ -40,8 +41,8 @@ export const ModalAcessarConta = ({ visible, closeFn }) => {
       icon={<UserSwitchOutlined />}
       confirmLoading={loading}
       okText='Confirmar'
-      onOk={() => handleSubmit()}
-      onCancel={() => handleCancel()}
+      onOk={handleSubmit}
+      onCancel={handleCancel}
       cancelButtonProps={{ style: { display: 'none' } }}
     >
       <Form form={form} layout='vertical'>
@@ -95,7 +96,8 @@ export const ModalAcessarConta = ({ visible, closeFn }) => {
               </Button>
               <ModalRedefinirSenha 
                 visible={exibirTelaParaRedefinirSenha} 
-                closeFn={() => setExibirTelaParaRedefinirSenha(false)} 
+                closeFn={() => setExibirTelaParaRedefinirSenha(false)}
+                openLg={openLg}
               />
             </Form.Item>
           </Col>
@@ -109,7 +111,8 @@ export const ModalAcessarConta = ({ visible, closeFn }) => {
               </Button>
               <ModalCadastrarConta 
                 visible={exibirTelaParaCadastrarConta} 
-                closeFn={() => setExibirTelaParaCadastrarConta(false)} 
+                closeFn={() => setExibirTelaParaCadastrarConta(false)}
+                openLg={openLg}
               />
             </Form.Item>
           </Col>
@@ -119,7 +122,8 @@ export const ModalAcessarConta = ({ visible, closeFn }) => {
   )
 }
 
-ModalCadastrarConta.propTypes = {
+ModalAcessarConta.propTypes = {
   visible: PropTypes.bool.isRequired,
-  closeFn: PropTypes.func.isRequired
+  closeFn: PropTypes.func.isRequired,
+  openLg: PropTypes.func.isRequired
 }
