@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react'
 import { Row, Col, Form, Modal, Input } from 'antd'
 import { MailOutlined, UserOutlined, UserAddOutlined } from '@ant-design/icons'
+import axios from 'axios'
+import PropTypes from 'prop-types'
 
 export const ModalCadastrarConta = ({ visible, closeFn }) => {
   const [form] = Form.useForm()
@@ -15,7 +17,11 @@ export const ModalCadastrarConta = ({ visible, closeFn }) => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      console.log(values)
+      // eslint-disable-next-line no-unused-vars
+      const { confirmarSenha, ...rest } = values
+      const newUser = { ...rest, atribuicao: 2 }
+      const response = await axios.post('http://localhost:3003/usuario/', newUser)
+      console.log(response)
     } catch (error) {
       console.log(error)
     } finally {
@@ -30,8 +36,8 @@ export const ModalCadastrarConta = ({ visible, closeFn }) => {
       icon={<UserAddOutlined />}
       confirmLoading={loading}
       okText='Cadastrar'
-      onOk={() => handleSubmit()}
-      onCancel={() => handleCancel()}
+      onOk={handleSubmit}
+      onCancel={handleCancel}
       cancelButtonProps={{ style: { display: 'none' } }}
     >
       <Form 
@@ -39,19 +45,41 @@ export const ModalCadastrarConta = ({ visible, closeFn }) => {
         layout='vertical' 
         size='middle'
       > 
-        <Row>
-          <Col span={24}>
+        <Row gutter={[8,8]}>
+          <Col span={12}>
             <Form.Item
-              name='username'
+              name='nome'
               label='Nome'
               hasFeedback
               required
               rules={[
-                { required: true, message: 'Obrigatório preencher Nome' }
+                { 
+                  required: true, 
+                  message: 'Obrigatório preencher Nome' 
+                },
               ]}
             >
               <Input 
                 placeholder='Digite seu Nome'
+                addonAfter={<UserOutlined />}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='sobrenome'
+              label='Sobrenome'
+              hasFeedback
+              required
+              rules={[
+                { 
+                  required: true,
+                  message: 'Obrigatório preencher Sobrenome' 
+                }
+              ]}
+            >
+              <Input 
+                placeholder='Digite seu Sobrenome'
                 addonAfter={<UserOutlined />}
               />
             </Form.Item>
@@ -77,7 +105,7 @@ export const ModalCadastrarConta = ({ visible, closeFn }) => {
           </Col>
           <Col span={24}>
             <Form.Item
-              name='password'
+              name='senha'
               label='Senha'
               hasFeedback
               required
@@ -85,7 +113,40 @@ export const ModalCadastrarConta = ({ visible, closeFn }) => {
                 { 
                   required: true, 
                   message: 'Obrigatório preencher Senha' 
-                }
+                },
+                () => ({
+                  validator(_, value) {
+                    if (!value) {
+                      return Promise.resolve();
+                    }
+                    if (value.length < 8) {
+                      return Promise.reject(
+                        new Error(
+                          "Uma Senha segura precisa de no mínimo de 8 caracteres!"
+                        )
+                      );
+                    }
+                    if (
+                      value.includes("1") === false &&
+                      value.includes("2") === false &&
+                      value.includes("3") === false &&
+                      value.includes("4") === false &&
+                      value.includes("5") === false &&
+                      value.includes("6") === false &&
+                      value.includes("7") === false &&
+                      value.includes("8") === false &&
+                      value.includes("9") === false &&
+                      value.includes("0") === false
+                    ) {
+                      return Promise.reject(
+                        new Error(
+                          "Uma Senha segura precisa conter ao menos um número!"
+                        )
+                      );
+                    }
+                      return Promise.resolve();
+                  },
+                })
               ]}
             >
               <Input.Password
@@ -95,7 +156,7 @@ export const ModalCadastrarConta = ({ visible, closeFn }) => {
           </Col>
           <Col span={24}>
             <Form.Item
-              name='confirmPassword'
+              name='confirmarSenha'
               label='Confirmar Senha'
               hasFeedback
               required
@@ -103,7 +164,18 @@ export const ModalCadastrarConta = ({ visible, closeFn }) => {
                 { 
                   required: true, 
                   message: 'Obrigatório preencher Confirmar Senha' 
-                }
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('senha') === value) {
+                      return Promise.resolve()
+                    }
+                    if (value.length >= getFieldValue('senha').length  && getFieldValue('senha') !== value) {
+                      return Promise.reject(new Error('Os campos Senha e Confirmar Senha não estão iguais!'))
+                    }
+                    return Promise.resolve()
+                  }
+                })
               ]}
             >
               <Input.Password
@@ -115,4 +187,9 @@ export const ModalCadastrarConta = ({ visible, closeFn }) => {
       </Form>
     </Modal>
   )
+}
+
+ModalCadastrarConta.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  closeFn: PropTypes.func.isRequired
 }

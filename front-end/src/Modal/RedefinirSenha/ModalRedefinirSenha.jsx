@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Row, Col, Form, Input, Modal } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
+import PropTypes from 'prop-types'
 
 export const ModalRedefinirSenha = ({ visible, closeFn }) => {
   const [form] = Form.useForm()
@@ -31,8 +32,8 @@ export const ModalRedefinirSenha = ({ visible, closeFn }) => {
       icon={<LockOutlined />}
       confirmLoading={loading}
       okText='Enviar'
-      onOk={() => handleSubmit()}
-      onCancel={() => handleCancel()}
+      onOk={handleSubmit}
+      onCancel={handleCancel}
       cancelButtonProps={{ style: { display: 'none' } }}
     >
       <Form form={form} layout='vertical' size='middle'> 
@@ -44,7 +45,10 @@ export const ModalRedefinirSenha = ({ visible, closeFn }) => {
               hasFeedback
               required
               rules={[
-                { required: true, message: 'Obrigatório preencher E-mail' }
+                { 
+                  required: true, 
+                  message: 'Obrigatório preencher E-mail' 
+                }
               ]}
             >
               <Input
@@ -56,6 +60,10 @@ export const ModalRedefinirSenha = ({ visible, closeFn }) => {
         </Row>
       </Form>
     </Modal>
-    
   )
+}
+
+ModalRedefinirSenha.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  closeFn: PropTypes.func.isRequired
 }

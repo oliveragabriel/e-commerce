@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react'
 import { Row, Col, Modal, Form, Button, Input } from 'antd'
 import { MailOutlined, LockOutlined, UserAddOutlined, UserSwitchOutlined } from '@ant-design/icons'
-import axios from 'axios'
 import { ModalCadastrarConta } from '../CadastrarConta/ModalCadastrarConta'
 import { ModalRedefinirSenha } from '../RedefinirSenha/ModalRedefinirSenha'
+import axios from 'axios'
+import PropTypes from 'prop-types'
 
 export const ModalAcessarConta = ({ visible, closeFn }) => {
   const [form] = Form.useForm()
@@ -116,4 +117,9 @@ export const ModalAcessarConta = ({ visible, closeFn }) => {
       </Form>
     </Modal>
   )
+}
+
+ModalCadastrarConta.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  closeFn: PropTypes.func.isRequired
 }
