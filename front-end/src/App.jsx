@@ -1,6 +1,7 @@
 import { ConfigProvider as AntdConfigProvider, Layout } from 'antd'
 import ptBR from 'antd/es/locale/pt_BR'
-import { Header, Card } from './layout'
+import { Header } from './layout/Header/Header'
+import { Card } from './layout/Card/Card'
 
 function App() {
 

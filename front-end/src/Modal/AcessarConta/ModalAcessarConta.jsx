@@ -2,37 +2,35 @@ import { useState, useCallback } from 'react'
 import { Row, Col, Modal, Form, Button, Input } from 'antd'
 import { MailOutlined, LockOutlined, UserAddOutlined, UserSwitchOutlined } from '@ant-design/icons'
 import axios from 'axios'
+import { ModalCadastrarConta } from '../CadastrarConta/ModalCadastrarConta'
+import { ModalRedefinirSenha } from '../RedefinirSenha/ModalRedefinirSenha'
 
-export function ModalLogin({ visible, closeFn = () => {} }) {
+export const ModalAcessarConta = ({ visible, closeFn }) => {
   const [form] = Form.useForm()
+
   const [loading, setLoading] = useState(false)
-  const [loggedUser, setLoggedUser] = useState()
+  const [usuario, setUsuario] = useState()
+  const [exibirTelaParaRedefinirSenha, setExibirTelaParaRedefinirSenha] = useState(false)
+  const [exibirTelaParaCadastrarConta, setExibirTelaParaCadastrarConta] = useState(false)
 
   const handleCancel = useCallback(() => {
     closeFn()
     form.resetFields()
   }, [closeFn, form])
 
-
-  const executaLoginParaUsuario = useCallback((values) => {
-    setLoading(true)
-    axios.post('http://localhost:3003/login/', { ...values })
-      .then(response => {
-        if (response.data.length > 0) setLoggedUser(response.data[0])
-        handleCancel()
-      })
-      .catch(error => {
-        console.error(error);
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  },[handleCancel])
-
   const handleSubmit = useCallback(async () => {
-      form.validateFields()
-        .then((values) => executaLoginParaUsuario(values))
-  },[executaLoginParaUsuario, form])
+    try {
+      setLoading(true)
+      const values = await form.validateFields()
+      const response = await axios.post('http://localhost:3003/login/', { ...values })
+      if (response.data.length > 0) setUsuario(response.data[0])
+      handleCancel()
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }, [form, handleCancel])
 
   return (
     <Modal
@@ -40,8 +38,10 @@ export function ModalLogin({ visible, closeFn = () => {} }) {
       open={visible}
       icon={<UserSwitchOutlined />}
       confirmLoading={loading}
+      okText='Confirmar'
       onOk={() => handleSubmit()}
-      onCancel={() => handleCancel(false)}  
+      onCancel={() => handleCancel()}
+      cancelButtonProps={{ style: { display: 'none' } }}
     >
       <Form form={form} layout='vertical'>
         <Row justify='center'>
@@ -52,7 +52,10 @@ export function ModalLogin({ visible, closeFn = () => {} }) {
               hasFeedback
               required
               rules={[
-                { required: true, message: 'Obrigatório preencher E-mail' }
+                { 
+                  required: true, 
+                  message: 'Obrigatório preencher E-mail' 
+                }
               ]}
             >
               <Input
@@ -68,7 +71,10 @@ export function ModalLogin({ visible, closeFn = () => {} }) {
               hasFeedback
               required
               rules={[
-                { required: true, message: 'Obrigatório preencher Senha' }
+                { 
+                  required: true, 
+                  message: 'Obrigatório preencher Senha' 
+                }
               ]}
             >
               <Input.Password
@@ -82,18 +88,28 @@ export function ModalLogin({ visible, closeFn = () => {} }) {
             <Form.Item>
               <Button
                 icon={<LockOutlined />}
+                onClick={() => setExibirTelaParaRedefinirSenha(true)}
               >
-                Esqueci Minha Senha
+                Redefinir Senha
               </Button>
+              <ModalRedefinirSenha 
+                visible={exibirTelaParaRedefinirSenha} 
+                closeFn={() => setExibirTelaParaRedefinirSenha(false)} 
+              />
             </Form.Item>
           </Col>
           <Col span={12} style={{ display: 'flex', justifyContent: 'end' }}>
             <Form.Item>
               <Button
                 icon={<UserAddOutlined/>}
+                onClick={() => setExibirTelaParaCadastrarConta(true)}
               >
                 Cadastrar Nova Conta
               </Button>
+              <ModalCadastrarConta 
+                visible={exibirTelaParaCadastrarConta} 
+                closeFn={() => setExibirTelaParaCadastrarConta(false)} 
+              />
             </Form.Item>
           </Col>
         </Row>

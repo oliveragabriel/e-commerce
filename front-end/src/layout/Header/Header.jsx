@@ -1,19 +1,19 @@
 import { Layout, Row, Col, Button } from 'antd'
 import { useState } from 'react'
-import { ModalLogin } from '../../ModalLogin/ModalLogin'
+import { ModalAcessarConta } from '../../Modal/AcessarConta/ModalAcessarConta'
 
-export function Header() {
+export const Header = () => {
   const [greetings, setGreetings] = useState('Olá, faça seu login')
-  const [modalLoginVisible, setModalLoginVisible] = useState(false)
+  const [renderModalAcessarConta, setRenderModalAcessarConta] = useState(false)
 
   return (
     <Layout.Header>
       <Row justify='end'>
         <Col>
-          <Button type='text' style={{ color: '#FFFFFF' }} onClick={() => setModalLoginVisible(true)}>
+          <Button type='text' style={{ color: '#FFFFFF' }} onClick={() => setRenderModalAcessarConta(true)}>
             {greetings}
           </Button>
-          <ModalLogin visible={modalLoginVisible} closeFn={() => setModalLoginVisible(false)}/>
+          <ModalAcessarConta visible={renderModalAcessarConta} closeFn={() => setRenderModalAcessarConta(false)}/>
         </Col>
       </Row>
     </Layout.Header>
