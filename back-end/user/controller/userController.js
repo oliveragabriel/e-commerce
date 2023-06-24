@@ -23,7 +23,8 @@ exports.getUserById = (req, res) => {
 };
 
 exports.postAddNewUser = (req, res) => {
-  const { nome, sobrenome, atribuicao, senha } = req.body
+  const { nome, sobrenome, senha } = req.body
+  const atribuicao = 2
 
   userService.postAddNewUser(nome, sobrenome, atribuicao, senha)
     .then(() => {

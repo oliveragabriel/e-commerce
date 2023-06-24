@@ -1,15 +1,94 @@
-import { LogoutOutlined } from '@ant-design/icons'
-import { Layout, Row, Col, Button, Tooltip } from 'antd'
+import { 
+  CaretDownOutlined, 
+  CreditCardOutlined,  
+  HeartOutlined, 
+  LogoutOutlined, 
+  ShoppingOutlined, 
+  UserOutlined 
+} from '@ant-design/icons'
+import { Layout, Row, Col, Button, Menu, Tooltip } from 'antd'
 import { useMemo, useState } from 'react'
+import { styled } from 'styled-components'
 import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext'
 import { ModalAcessarConta } from '../../Modal/AcessarConta/ModalAcessarConta'
+import { BsSunFill } from 'react-icons/bs';
+import { RiMoonClearFill } from 'react-icons/ri';
+import PropTypes from 'prop-types'
 
-export const Header = () => {
+const StyledMenu = styled(Menu)`
+  background-color: transparent;
+  color: #FFFFFF;
+  :hover {
+    color: #FFFFFF;
+  }
+  :active {
+    color: #FFFFFF;
+  }
+`
+
+export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
   const { usuario, setUsuario } = useControleUsuarioContext()
 
-  const [renderModalAcessarConta, setRenderModalAcessarConta] = useState(false)
+  const [exibirTelaParaAcessarConta, setExibirTelaParaAcessarConta] = useState(false)
 
-  const greetings = useMemo(() => usuario?.nome ? `Olá, ${usuario?.nome}` : 'Olá, faça seu login', [usuario])
+  const items = useMemo(() => [
+    {
+      label: (
+        <Row gutter={[8,8]}>
+          <Col>
+            {`Olá, ${usuario?.nome}`}
+          </Col>
+          <Col>
+            <CaretDownOutlined />
+          </Col>
+        </Row>        
+      ),
+      key: 'Menu',
+      children: [
+        {
+          key: 'perfil',
+          label: 'Meu perfil',
+          icon: <UserOutlined />,
+          onTitleClick: () => console.log('Meus perfil')
+        },
+        {
+          key: 'cartoes',
+          label: 'Meus cartões',
+          icon: <CreditCardOutlined />,
+          onTitleClick: () => console.log('Meus cartões')
+        },
+        {
+          key: 'pedidos',
+          label: 'Meus pedidos',
+          icon: <ShoppingOutlined />,
+          onTitleClick: () => console.log('Meus pedidos')
+        },
+        {
+          key: 'favoritos',
+          label: 'Meus favoritos',
+          icon: <HeartOutlined />,
+          onTitleClick: () => console.log('Meus favoritos')
+        },
+        {
+          key: 'logout',
+          label: 'Sair',
+          icon: <LogoutOutlined />,
+          onTitleClick: () => setUsuario({})
+        }
+      ],
+    }
+  ], [setUsuario, usuario?.nome])
+
+  const greetings = useMemo(() => {
+    return usuario?.nome 
+    ? (
+      <StyledMenu 
+        mode="horizontal" 
+        items={items}
+      />
+    ) 
+    : 'Olá, faça seu login'
+  }, [items, usuario?.nome])
 
   const renderUserOptions = useMemo(() => {
     if (usuario?.nome) {
@@ -20,9 +99,6 @@ export const Header = () => {
               {greetings}
             </span>
           </Col>
-          <Col>
-            bla
-          </Col>
         </Row>
       )
     }
@@ -30,30 +106,12 @@ export const Header = () => {
       <Button 
         type='text' 
         style={{ color: '#FFFFFF' }} 
-        onClick={() => setRenderModalAcessarConta(true)}
+        onClick={() => setExibirTelaParaAcessarConta(true)}
       >
         {greetings}
       </Button>
     )
   }, [greetings, usuario?.nome])
-
-  const renderLogoutButton = useMemo(() => {
-    if (usuario.nome) {
-      return (
-        <Col>
-          <Tooltip title='Sair'>
-            <div 
-              onClick={() => setUsuario({})}
-              style={{ cursor: 'pointer' }}
-            >
-              <LogoutOutlined style={{ color: '#FFFFFF', fontSize: 18 }}/>
-            </div>
-          </Tooltip>
-        </Col>
-      )
-    }
-    return null
-  }, [setUsuario, usuario.nome])
 
   return (
     <Layout.Header>
@@ -61,13 +119,38 @@ export const Header = () => {
         <Col>
           {renderUserOptions}
           <ModalAcessarConta 
-            visible={renderModalAcessarConta} 
-            closeFn={() => setRenderModalAcessarConta(false)}
-            openLg={() => setRenderModalAcessarConta(true)}
+            visible={exibirTelaParaAcessarConta} 
+            closeFn={() => setExibirTelaParaAcessarConta(false)}
+            openLg={() => setExibirTelaParaAcessarConta(true)}
           />
         </Col>
-        {renderLogoutButton}
+        <Col style={{ display: 'flex' }}>
+          <div onClick={() => setSystemAtDarkMode(!systemAtDarkMode)} style={{ display: 'flex' }}>
+            {
+              systemAtDarkMode 
+              ? (
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center' }}>
+                  <Tooltip title='Light Mode'>
+                    <BsSunFill style={{ fontSize: 22, color: '#FFBF00' }}/> 
+                  </Tooltip>
+                </div>
+              )
+              : (
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center' }}>
+                  <Tooltip title='Dark Mode'>
+                    <RiMoonClearFill style={{ fontSize: 22, color: '#F5F5DC' }} />
+                  </Tooltip>
+                </div>
+              )
+            }
+          </div>
+        </Col>
       </Row>
     </Layout.Header>
   )
+}
+
+Header.propTypes = {
+  systemAtDarkMode: PropTypes.bool.isRequired,
+  setSystemAtDarkMode: PropTypes.func.isRequired
 }
