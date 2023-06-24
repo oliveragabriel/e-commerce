@@ -113,8 +113,10 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
     )
   }, [greetings, usuario?.nome])
 
+  const themeModeStyle = systemAtDarkMode ? undefined : { backgroundColor: '#4682B4' }
+
   return (
-    <Layout.Header>
+    <Layout.Header style={themeModeStyle}>
       <Row justify='end' gutter={[24,24]}>
         <Col>
           {renderUserOptions}
@@ -131,14 +133,14 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
               ? (
                 <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center' }}>
                   <Tooltip title='Light Mode'>
-                    <BsSunFill style={{ fontSize: 22, color: '#FFBF00' }}/> 
+                    <BsSunFill style={{ fontSize: 22, color: '#F8DE7E' }}/> 
                   </Tooltip>
                 </div>
               )
               : (
                 <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center' }}>
                   <Tooltip title='Dark Mode'>
-                    <RiMoonClearFill style={{ fontSize: 22, color: '#F5F5DC' }} />
+                    <RiMoonClearFill style={{ fontSize: 22, color: ' #F6F1D5 ' }} />
                   </Tooltip>
                 </div>
               )

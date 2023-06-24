@@ -6,11 +6,9 @@ import { ControleUsuarioContextProvider } from './context/ControleUsuarioContext
 import { useState } from 'react'
 
 function App() {
-  const [systemAtDarkMode, setSystemAtDarkMode] = useState(false);
+  const [systemAtDarkMode, setSystemAtDarkMode] = useState(false)
 
-  const { defaultAlgorithm, darkAlgorithm } = theme;
-  console.log("🚀 ~ App ~ darkAlgorithm:", darkAlgorithm)
-  console.log("🚀 ~ App ~ defaultAlgorithm:", defaultAlgorithm)
+  const { defaultAlgorithm, darkAlgorithm } = theme
 
   return (
     <AntdConfigProvider 
