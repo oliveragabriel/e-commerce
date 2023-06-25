@@ -12,8 +12,9 @@ import { styled } from 'styled-components'
 import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext'
 import { ModalAcessarConta } from '../../Modal/AcessarConta/ModalAcessarConta'
 import { BsSunFill } from 'react-icons/bs';
-import { RiMoonClearFill } from 'react-icons/ri';
+import { RiMoonClearFill } from 'react-icons/ri'
 import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
 
 const StyledMenu = styled(Menu)`
   background-color: transparent;
@@ -28,6 +29,7 @@ const StyledMenu = styled(Menu)`
 
 export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
   const { usuario, setUsuario } = useControleUsuarioContext()
+  const navigate = useNavigate()
 
   const [exibirTelaParaAcessarConta, setExibirTelaParaAcessarConta] = useState(false)
 
@@ -49,35 +51,38 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
           key: 'perfil',
           label: 'Meu perfil',
           icon: <UserOutlined />,
-          onTitleClick: () => console.log('Meus perfil')
+          onClick: () => navigate('perfil')
         },
         {
           key: 'cartoes',
           label: 'Meus cartões',
           icon: <CreditCardOutlined />,
-          onTitleClick: () => console.log('Meus cartões')
+          onClick: () => navigate('cartoes')
         },
         {
           key: 'pedidos',
           label: 'Meus pedidos',
           icon: <ShoppingOutlined />,
-          onTitleClick: () => console.log('Meus pedidos')
+          onClick: () => navigate('pedidos')
         },
         {
           key: 'favoritos',
           label: 'Meus favoritos',
           icon: <HeartOutlined />,
-          onTitleClick: () => console.log('Meus favoritos')
+          onClick: () => navigate('favoritos')
         },
         {
           key: 'logout',
           label: 'Sair',
           icon: <LogoutOutlined />,
-          onTitleClick: () => setUsuario({})
+          onClick: () => {
+            setUsuario({})
+            navigate('home')
+          }
         }
       ],
     }
-  ], [setUsuario, usuario?.nome])
+  ], [navigate, setUsuario, usuario?.nome])
 
   const greetings = useMemo(() => {
     return usuario?.nome 
