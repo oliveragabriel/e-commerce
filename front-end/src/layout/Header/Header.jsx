@@ -118,7 +118,7 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
     )
   }, [greetings, usuario?.nome])
 
-  const themeModeStyle = systemAtDarkMode ? undefined : { backgroundColor: '#4682B4' }
+  const themeModeStyle = systemAtDarkMode ? { height: '7vh' } : { height: '7vh', backgroundColor: '#4682B4' }
 
   return (
     <Layout.Header style={themeModeStyle}>
