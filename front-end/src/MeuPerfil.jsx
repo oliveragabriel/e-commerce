@@ -1,21 +1,24 @@
-/* eslint-disable no-unused-vars */
-import { useCallback, useState } from 'react'
-import { Row, Col, Form, Input, message, Button, DatePicker, Select } from 'antd'
-import { MailOutlined, UserOutlined } from '@ant-design/icons'
 import axios from 'axios'
+import { useCallback, useEffect, useState } from 'react'
+import { Row, Col, Form, Input, message, Button, DatePicker, Select } from 'antd'
+import { CheckOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import { HiOutlineIdentification } from 'react-icons/hi'
 import { BsTelephone } from 'react-icons/bs'
+import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 
 export const MeuPerfil = () => {
   const [form] = Form.useForm()
   const [messageApi, contextHolder] = message.useMessage()
+  const { usuario, setUsuario } = useControleUsuarioContext()
+
   const [loading, setLoading] = useState(false)
-  const [telefone, setTelefone] = useState()
+  const [countries, setCountries] = useState([])
 
   const handleSubmit = useCallback(async () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
+      console.log(values)
       messageApi.success('bla')
     } catch (error) {
       messageApi.error('erro')
@@ -23,6 +26,44 @@ export const MeuPerfil = () => {
       setLoading(false)
     }
   }, [form, messageApi])
+
+  const getCountriesList = useCallback(async () => {
+    try {
+      setLoading(true)
+      const response = await axios.get('http://localhost:3003/pais/')
+      const countriesFormatedToSelectItem = response?.data?.result?.map((country) => ({
+        label: `${country.sigla} - ${country.nome}`,
+        value: country.id
+      }))
+      setCountries(countriesFormatedToSelectItem)
+    } catch (error) {
+      messageApi.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }, [messageApi])
+
+  const getUserData = useCallback(async () => {
+    try {
+      setLoading(true)
+      const response = await axios.get(`http://localhost:3003/usuario/${usuario.id}`)
+      if (response?.data?.result?.length > 0) {
+        const usuario = response.data.result[0]
+        setUsuario(usuario)
+        form.setFieldsValue(usuario)
+      }
+    } catch (error) {
+      messageApi.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }, [form, messageApi, setUsuario, usuario.id])
+
+  useEffect(() => {
+    getUserData()
+    getCountriesList()
+  }, [getCountriesList, getUserData])
+  
 
   return (
     <div style={{ margin: 8, padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
@@ -75,6 +116,20 @@ export const MeuPerfil = () => {
             <Form.Item
               name='cpf'
               label='CPF'
+              rules={[
+                { max: 14, message: "Quantidade máxima de caracteres é 14!" },
+                () => ({
+                  validator(_, value) {
+                    if (!value) {
+                      return Promise.resolve();
+                    }
+                    if (value.includes(".") || value.includes("-")) {
+                      return Promise.reject(new Error('Digite apenas números, sem pontos ou traços!'));
+                    }
+                    return Promise.resolve();
+                  },
+                })
+              ]}
             >
               <Input 
                 placeholder='Digite seu CPF'
@@ -84,7 +139,7 @@ export const MeuPerfil = () => {
           </Col>
           <Col span={12}>
             <Form.Item
-              name='dataNascimento'
+              name='dt_nascimento'
               label='Data de Nascimento'
             >
               <DatePicker
@@ -106,20 +161,7 @@ export const MeuPerfil = () => {
                     filterOption={(input, option) =>
                     (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                     }
-                    options={[
-                    {
-                        value: 'jack',
-                        label: 'Jack'
-                    },
-                    {
-                        value: 'lucy',
-                        label: 'Lucy'
-                    },
-                    {
-                        value: 'tom',
-                        label: 'Tom'
-                    }
-                    ]}
+                    options={countries}
                 />
             </Form.Item>
           </Col>
@@ -133,7 +175,26 @@ export const MeuPerfil = () => {
                 { 
                   required: true, 
                   message: 'Obrigatório preencher E-mail' 
-                }
+                },
+                () => ({
+                  validator(_, value) {
+                    if (!value) {
+                      return Promise.resolve();
+                    }
+                    if (value.length < 6) {
+                      return Promise.reject(new Error('Um e-mail válido precisa no mínimo de 6 caracteres'));
+                    }
+                    if (value.includes("@") === false) {
+                      return Promise.reject(new Error('Um e-mail válido precisa conter: @'));
+                    }
+                    if (value.includes(".") === false) {
+                      return Promise.reject(new Error('Um e-mail válido precisa conter: .'));
+                    }
+                    if (value.length >= 6 && value.includes(".") && value.includes("@")) {
+                      return Promise.resolve();
+                    }
+                  },
+                })
               ]}
             >
               <Input 
@@ -150,7 +211,6 @@ export const MeuPerfil = () => {
             >
               <Input
                 type='tel'
-                value={telefone}
                 placeholder='Digite sua Telefone'
                 addonAfter={<BsTelephone />}
               />
@@ -161,19 +221,17 @@ export const MeuPerfil = () => {
                 <Button 
                     style={{  marginRight: 6 }}
                     type='default'
+                    icon={<LockOutlined />}
+                    disabled={loading}
                 >
                     Gerenciar Senha
                 </Button>
                 <Button 
-                    style={{  margin: '0px 6px' }}
-                    type='default'
-                >
-                    Gerenciar Endereços
-                </Button>
-                <Button 
                     style={{  marginLeft: 6 }}
                     type='primary'
+                    loading={loading}
                     onClick={handleSubmit}
+                    icon={<CheckOutlined />}
                 >
                     Salvar Alterações
                 </Button>

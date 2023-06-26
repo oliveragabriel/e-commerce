@@ -54,6 +54,12 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
           onClick: () => navigate('perfil')
         },
         {
+          key: 'enderecos',
+          label: 'Meus endereços',
+          icon: <CreditCardOutlined />,
+          onClick: () => navigate('cartoes')
+        },
+        {
           key: 'cartoes',
           label: 'Meus cartões',
           icon: <CreditCardOutlined />,
