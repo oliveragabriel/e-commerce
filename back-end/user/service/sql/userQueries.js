@@ -1,10 +1,8 @@
 exports.listAllAssignmentsQuery = 'SELECT * FROM atribuicao';
 
-exports.getUserByIdQuery = 'SELECT * FROM usuario WHERE id = $1';
+exports.getUserByIdQuery = 'SELECT u.id, u.nome, u.sobrenome, u.cpf, u.dt_nascimento, u.nacionalidade, u.atribuicao, c.email, c.telefone FROM usuario u LEFT JOIN contato c ON c.id_usuario = u.id WHERE u.id = $1';
 
 exports.postAddNewUserQuery = 'INSERT INTO usuario( nome, sobrenome, atribuicao, senha) VALUES ( $1, $2, $3, $4 );';
-
-exports.putEditUserByIdQuery = 'UPDATE usuario SET nome = $1, sobrenome = $2, dt_nascimento = $3, cpf = $4, nacionalidade = $5, senha = $6 WHERE id = $7;'
 
 exports.deleteUserByIdQuery = 'DELETE FROM usuario WHERE id = $1';
 

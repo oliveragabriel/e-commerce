@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
-import { Row, Col, Form, Input, message, Button, DatePicker, Select } from 'antd'
+import { Row, Col, Form, Input, message, Button, Select } from 'antd'
 import { CheckOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import { HiOutlineIdentification } from 'react-icons/hi'
 import { BsTelephone } from 'react-icons/bs'
@@ -18,14 +18,14 @@ export const MeuPerfil = () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      console.log(values)
-      messageApi.success('bla')
+      const response = await axios.put(`http://localhost:3003/usuario/${usuario.id}`, values)
+      messageApi.success(response.data.message)
     } catch (error) {
-      messageApi.error('erro')
+      messageApi.error(error)
     } finally {
       setLoading(false)
     }
-  }, [form, messageApi])
+  }, [form, messageApi, usuario.id])
 
   const getCountriesList = useCallback(async () => {
     try {
@@ -139,17 +139,6 @@ export const MeuPerfil = () => {
           </Col>
           <Col span={12}>
             <Form.Item
-              name='dt_nascimento'
-              label='Data de Nascimento'
-            >
-              <DatePicker
-                style={{ width: '100%' }} 
-                format={'DD/MM/YYYY'} 
-              />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
               name='nacionalidade'
               label='Nacionalidade'
             >
@@ -204,7 +193,7 @@ export const MeuPerfil = () => {
               />
             </Form.Item>
           </Col>
-          <Col span={24}>
+          <Col span={12}>
             <Form.Item
               name='telefone'
               label='Telefone'

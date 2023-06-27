@@ -21,15 +21,21 @@ exports.getUserById = (idUsuario) => {
 exports.postAddNewUser = async (nome, sobrenome, atribuicao, senha) => {
   const values = [nome, sobrenome, atribuicao, senha];
   return await database.query(userQueries.postAddNewUserQuery, values)
-    .then((result) => result.rows)
+    .then((result) => {
+      return result.rows
+    })
     .catch((error) => {
       throw error;
-    });
+  });
 };
 
-exports.putEditUserById = async (nome, sobrenome, dtNascimento, cpf, nacionalidade, senha, idUsuario ) => {
-  const values = [nome, sobrenome, dtNascimento, cpf, nacionalidade, senha, idUsuario];
-  return await database.query(userQueries.putEditUserByIdQuery, values)
+exports.putEditUserById = async (nome, sobrenome, cpf, nacionalidade, email, telefone, idUsuario) => {
+  const sqlColumnCpf = cpf ? `cpf = '${cpf}',` : ''
+  const sqlColumnNacionalidade = nacionalidade ? `nacionalidade = ${nacionalidade}` : ''
+  const sqlColumnTelefone = telefone ? `, telefone = '${telefone}'` : ''
+  const sqlHandleTableContato = `UPDATE contato SET email = '${email}' ${sqlColumnTelefone} WHERE id_usuario = ${idUsuario};` 
+  const sqlFinal = `UPDATE usuario SET nome = '${nome}', sobrenome = '${sobrenome}', ${sqlColumnCpf} ${sqlColumnNacionalidade} WHERE id = ${idUsuario}; ${sqlHandleTableContato}`
+  return await database.query(sqlFinal)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;
