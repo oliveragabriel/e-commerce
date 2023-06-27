@@ -11,6 +11,7 @@ export const MeuPerfil = () => {
   const [form] = Form.useForm()
   const [messageApi, contextHolder] = message.useMessage()
   const { usuario, setUsuario } = useControleUsuarioContext()
+  console.log("🚀 ~ MeuPerfil ~ usuario:", usuario)
 
   const [loading, setLoading] = useState(false)
   const [countries, setCountries] = useState([])
@@ -56,7 +57,7 @@ export const MeuPerfil = () => {
       if (response?.data?.result?.length > 0) {
         const usuario = response.data.result[0]
         setUsuario(usuario)
-        form.setFieldsValue(usuario)
+        form.setFieldsValue({...usuario, nacionalidade: usuario?.nacionalidade ? Number(usuario?.nacionalidade) : null })
       }
     } catch (error) {
       messageApi.error(error)
