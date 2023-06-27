@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Row, Col, Modal, Form, Input, message } from 'antd'
-import { MailOutlined, UserOutlined, UserAddOutlined } from '@ant-design/icons'
+import { UserOutlined, UserAddOutlined } from '@ant-design/icons'
+import { PiUserListLight } from 'react-icons/pi'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 
@@ -18,8 +19,8 @@ export const ModalCadastrarConta = ({ visible, closeFn, openLg }) => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      const { senha, nome, sobrenome, email } = values
-      const response = await axios.post('http://localhost:3003/usuario/', { senha, nome, sobrenome, email })
+      const { senha, nome, sobrenome, login } = values
+      const response = await axios.post('http://localhost:3003/usuario/', { senha, nome, sobrenome, login })
       messageApi.success(response.data.message)
       closeFn()
       openLg()
@@ -88,20 +89,20 @@ export const ModalCadastrarConta = ({ visible, closeFn, openLg }) => {
           </Col>
           <Col span={24}>
             <Form.Item
-              name='email'
-              label='E-mail'
+              name='login'
+              label='Login'
               hasFeedback
               required
               rules={[
                 { 
                   required: true, 
-                  message: 'Obrigatório preencher E-mail' 
+                  message: 'Obrigatório preencher Login' 
                 }
               ]}
             >
               <Input 
-                placeholder='Digite seu E-mail'
-                addonAfter={<MailOutlined />}
+                placeholder='Digite seu Login'
+                addonAfter={<PiUserListLight />}
               />
             </Form.Item>
           </Col>

@@ -1,9 +1,10 @@
 import axios from 'axios'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Row, Col, Form, Input, message, Button, Select } from 'antd'
 import { CheckOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import { HiOutlineIdentification } from 'react-icons/hi'
 import { BsTelephone } from 'react-icons/bs'
+import { PiUserListLight } from 'react-icons/pi'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 
 export const MeuPerfil = () => {
@@ -14,18 +15,23 @@ export const MeuPerfil = () => {
   const [loading, setLoading] = useState(false)
   const [countries, setCountries] = useState([])
 
+  const hasContato = useMemo(() => {
+    const hasEmail = form.getFieldValue('email')
+    return hasEmail ? true : false
+  }, [form])
+
   const handleSubmit = useCallback(async () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      const response = await axios.put(`http://localhost:3003/usuario/${usuario.id}`, values)
+      const response = await axios.put(`http://localhost:3003/usuario/${usuario.id}`, {...values, hasContato})
       messageApi.success(response.data.message)
     } catch (error) {
       messageApi.error(error)
     } finally {
       setLoading(false)
     }
-  }, [form, messageApi, usuario.id])
+  }, [form, hasContato, messageApi, usuario.id])
 
   const getCountriesList = useCallback(async () => {
     try {
@@ -74,6 +80,25 @@ export const MeuPerfil = () => {
         size='middle'
       > 
         <Row gutter={[8,8]}>
+          <Col span={24}>
+            <Form.Item
+              name='login'
+              label='Login'
+              hasFeedback
+              required
+              rules={[
+                { 
+                  required: true, 
+                  message: 'Obrigatório preencher Login' 
+                }
+              ]}
+            >
+              <Input
+                placeholder='Digite seu Login'
+                addonAfter={<PiUserListLight />}
+              />
+            </Form.Item>
+          </Col>
           <Col span={12}>
             <Form.Item
               name='nome'

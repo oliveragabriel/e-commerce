@@ -23,10 +23,10 @@ exports.getUserById = (req, res) => {
 };
 
 exports.postAddNewUser = (req, res) => {
-  const { nome, sobrenome, senha, email } = req.body
+  const { nome, sobrenome, senha, login } = req.body
   const atribuicao = 2
 
-  userService.postAddNewUser(nome, sobrenome, atribuicao, senha)
+  userService.postAddNewUser(nome, sobrenome, atribuicao, senha, login)
     .then(() => {
       res.status(200).send({ message: 'Usuário cadastrado com sucesso!' });
     })
@@ -36,10 +36,10 @@ exports.postAddNewUser = (req, res) => {
 };
 
 exports.putEditUserById = (req, res) => {
-  const { nome, sobrenome, cpf, nacionalidade, email, telefone } = req.body
+  const { nome, sobrenome, cpf, nacionalidade, email, telefone, hasContato, login } = req.body
   const { idUsuario } = req.params
 
-  userService.putEditUserById(nome, sobrenome, cpf, nacionalidade, email, telefone, idUsuario)
+  userService.putEditUserById(nome, sobrenome, cpf, nacionalidade, email, telefone, idUsuario, hasContato, login)
     .then(() => {
       res.status(200).send({ message: 'Usuário alterado com sucesso!' });
     })

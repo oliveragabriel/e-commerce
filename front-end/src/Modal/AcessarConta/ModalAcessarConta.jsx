@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Row, Col, Modal, Form, Button, Input } from 'antd'
-import { MailOutlined, LockOutlined, UserAddOutlined, UserSwitchOutlined } from '@ant-design/icons'
+import { LockOutlined, UserAddOutlined, UserSwitchOutlined } from '@ant-design/icons'
+import { PiUserListLight } from 'react-icons/pi'
 import { ModalCadastrarConta } from '../CadastrarConta/ModalCadastrarConta'
 import { ModalRedefinirSenha } from '../RedefinirSenha/ModalRedefinirSenha'
 import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext'
@@ -49,20 +50,20 @@ export const ModalAcessarConta = ({ visible, closeFn, openLg }) => {
         <Row justify='center'>
           <Col span={24}>
             <Form.Item
-              name='email'
-              label='E-mail'
+              name='login'
+              label='Login'
               hasFeedback
               required
               rules={[
                 { 
                   required: true, 
-                  message: 'Obrigatório preencher E-mail' 
+                  message: 'Obrigatório preencher Login' 
                 }
               ]}
             >
               <Input
-                placeholder='Digite seu E-mail'
-                addonAfter={<MailOutlined />}
+                placeholder='Digite seu Login'
+                addonAfter={<PiUserListLight />}
               />
             </Form.Item>
           </Col>

@@ -18,8 +18,8 @@ exports.getUserById = (idUsuario) => {
     });
 };
 
-exports.postAddNewUser = async (nome, sobrenome, atribuicao, senha) => {
-  const values = [nome, sobrenome, atribuicao, senha];
+exports.postAddNewUser = async (nome, sobrenome, atribuicao, senha, login) => {
+  const values = [nome, sobrenome, atribuicao, senha, login];
   return await database.query(userQueries.postAddNewUserQuery, values)
     .then((result) => {
       return result.rows
@@ -29,12 +29,12 @@ exports.postAddNewUser = async (nome, sobrenome, atribuicao, senha) => {
   });
 };
 
-exports.putEditUserById = async (nome, sobrenome, cpf, nacionalidade, email, telefone, idUsuario) => {
-  const sqlColumnCpf = cpf ? `cpf = '${cpf}',` : ''
-  const sqlColumnNacionalidade = nacionalidade ? `nacionalidade = ${nacionalidade}` : ''
+exports.putEditUserById = async (nome, sobrenome, cpf, nacionalidade, email, telefone, idUsuario, hasContato, login) => {
+  const sqlColumnCpf = cpf ? `, cpf = '${cpf}'` : ''
+  const sqlColumnNacionalidade = nacionalidade ? `, nacionalidade = ${nacionalidade}` : ''
   const sqlColumnTelefone = telefone ? `, telefone = '${telefone}'` : ''
-  const sqlHandleTableContato = `UPDATE contato SET email = '${email}' ${sqlColumnTelefone} WHERE id_usuario = ${idUsuario};` 
-  const sqlFinal = `UPDATE usuario SET nome = '${nome}', sobrenome = '${sobrenome}', ${sqlColumnCpf} ${sqlColumnNacionalidade} WHERE id = ${idUsuario}; ${sqlHandleTableContato}`
+  const sqlHandleTableContato = hasContato ? `UPDATE contato SET email = '${email}' ${sqlColumnTelefone} WHERE id_usuario = ${idUsuario};` : `INSERT INTO contato( ${telefone ? `telefone,` : ''} email, id_usuario) VALUES ( ${telefone ? `'${telefone}',` : ''} '${email}', ${idUsuario} );`
+  const sqlFinal = `UPDATE usuario SET login = ${login}, nome = '${nome}', sobrenome = '${sobrenome}' ${sqlColumnCpf} ${sqlColumnNacionalidade} WHERE id = ${idUsuario}; ${sqlHandleTableContato}`
   return await database.query(sqlFinal)
     .then((result) => result.rows)
     .catch((error) => {
