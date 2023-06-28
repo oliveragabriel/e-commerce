@@ -6,12 +6,17 @@ import { HiOutlineIdentification } from 'react-icons/hi'
 import { BsTelephone } from 'react-icons/bs'
 import { PiUserListLight } from 'react-icons/pi'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
+import { ModalGerenciarSenha } from './Modal/GerenciarSenha/GerenciarSenha'
+import { Typography } from 'antd';
+
+const { Title } = Typography;
 
 export const MeuPerfil = () => {
   const [form] = Form.useForm()
   const [messageApi, contextHolder] = message.useMessage()
   const { usuario, setUsuario } = useControleUsuarioContext()
-  console.log("🚀 ~ MeuPerfil ~ usuario:", usuario)
+
+  const [exibirTelaParaGerenciarSenha, setExibirTelaParaGerenciarSenha] = useState(false)
 
   const [loading, setLoading] = useState(false)
   const [countries, setCountries] = useState([])
@@ -81,6 +86,9 @@ export const MeuPerfil = () => {
         size='middle'
       > 
         <Row gutter={[8,8]}>
+          <Col span={24}>
+            <Title level={3}>Meu perfil</Title>
+          </Col>
           <Col span={24}>
             <Form.Item
               name='login'
@@ -233,23 +241,29 @@ export const MeuPerfil = () => {
           </Col>
           <Col span={24}>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button 
-                    style={{  marginRight: 6 }}
-                    type='default'
-                    icon={<LockOutlined />}
-                    disabled={loading}
-                >
-                    Gerenciar Senha
-                </Button>
-                <Button 
-                    style={{  marginLeft: 6 }}
-                    type='primary'
-                    loading={loading}
-                    onClick={handleSubmit}
-                    icon={<CheckOutlined />}
-                >
-                    Salvar Alterações
-                </Button>
+              <ModalGerenciarSenha 
+                visible={exibirTelaParaGerenciarSenha} 
+                closeFn={() => setExibirTelaParaGerenciarSenha(false)}
+                openLg={() => setExibirTelaParaGerenciarSenha(true)}
+              />
+              <Button 
+                  style={{  marginRight: 6 }}
+                  type='default'
+                  icon={<LockOutlined />}
+                  disabled={loading}
+                  onClick={() => setExibirTelaParaGerenciarSenha(true)}
+              >
+                  Gerenciar Senha
+              </Button>
+              <Button 
+                  style={{  marginLeft: 6 }}
+                  type='primary'
+                  loading={loading}
+                  onClick={handleSubmit}
+                  icon={<CheckOutlined />}
+              >
+                  Salvar Alterações
+              </Button>
             </div>
           </Col>
         </Row>

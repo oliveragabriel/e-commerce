@@ -34,10 +34,11 @@ exports.putEditUserById = async (nome, sobrenome, cpf, nacionalidade, email, tel
   const sqlColumnNacionalidade = nacionalidade ? `, nacionalidade = ${nacionalidade}` : ''
   const sqlColumnTelefone = telefone ? `, telefone = '${telefone}'` : ''
   const sqlHandleTableContato = hasContato ? `UPDATE contato SET email = '${email}' ${sqlColumnTelefone} WHERE id_usuario = ${idUsuario};` : `INSERT INTO contato( ${telefone ? `telefone,` : ''} email, id_usuario) VALUES ( ${telefone ? `'${telefone}',` : ''} '${email}', ${idUsuario} );`
-  const sqlFinal = `UPDATE usuario SET login = ${login}, nome = '${nome}', sobrenome = '${sobrenome}' ${sqlColumnCpf} ${sqlColumnNacionalidade} WHERE id = ${idUsuario}; ${sqlHandleTableContato}`
+  const sqlFinal = `UPDATE usuario SET login = '${login}', nome = '${nome}', sobrenome = '${sobrenome}' ${sqlColumnCpf} ${sqlColumnNacionalidade} WHERE id = ${idUsuario}; ${sqlHandleTableContato}`
   return await database.query(sqlFinal)
     .then((result) => result.rows)
     .catch((error) => {
+      console.log("🚀 ~ exports.putEditUserById= ~ error:", error)
       throw error;
     });
 };
@@ -117,6 +118,15 @@ exports.putEditAddressById = async (rua, numero, complemento, bairro, cidade, id
 exports.deleteAddressById = async (idEndereco) => {
   const values = [idEndereco];
   return await database.query(userQueries.deleteAddressByIdQuery, values)
+    .then((result) => result.rows)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+exports.putEditPasswordById = async (senha, idUsuario) => {
+  const sql = `UPDATE usuario SET senha = '${senha}' WHERE id = ${idUsuario};`
+  return await database.query(sql)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;

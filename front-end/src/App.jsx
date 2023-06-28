@@ -6,6 +6,8 @@ import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { MeuPerfil } from './MeuPerfil'
 import './reset.css'
+import { MeusEnderecos } from './MeusEnderecos'
+import { MeusPedidos } from './MeusPedidos'
 
 function App() {
   const [systemAtDarkMode, setSystemAtDarkMode] = useState(false)
@@ -31,8 +33,9 @@ function App() {
                   <Route path="/" element={<div>/</div>} />
                   <Route path="/home" element={<div>home</div>} />
                   <Route path="/perfil" element={<MeuPerfil />} />
+                  <Route path="/endereco" element={<MeusEnderecos />} />
                   <Route path="/cartoes" element={<div>meus cartoes</div>} />
-                  <Route path="/pedidos" element={<div>meus pedidos</div>} />
+                  <Route path="/compras" element={<MeusPedidos />} />
                   <Route path="/favoritos" element={<div>meus favoritos</div>} />
               </Routes>
             </Card>

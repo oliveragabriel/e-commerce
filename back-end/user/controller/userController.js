@@ -48,6 +48,19 @@ exports.putEditUserById = (req, res) => {
     });
 };
 
+exports.putEditPasswordById = (req, res) => {
+  const { senha } = req.body
+  const { idUsuario } = req.params
+
+  userService.putEditPasswordById(senha, idUsuario)
+    .then(() => {
+      res.status(200).send({ message: 'Senha alterada com sucesso!' });
+    })
+    .catch((error) => {
+      res.status(500).send({ error });
+    });
+};
+
 exports.deleteUserById = (req, res) => {
   const idUsuario = req.params.idUsuario;
 

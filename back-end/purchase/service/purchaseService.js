@@ -1,7 +1,7 @@
 const database = require('../../database');
 const purchaseQueries = require('./sql/purchaseQueries');
 
-exports.listPurchaseByUserId = () => {
+exports.listPurchaseByUserId = (idUsuario) => {
   const values = [idUsuario];
 
   return database.query(purchaseQueries.listPurchaseByUserId, values)

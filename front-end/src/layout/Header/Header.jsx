@@ -4,7 +4,8 @@ import {
   HeartOutlined, 
   LogoutOutlined, 
   ShoppingOutlined, 
-  UserOutlined 
+  UserOutlined,
+  HomeOutlined
 } from '@ant-design/icons'
 import { Layout, Row, Col, Button, Menu, Tooltip } from 'antd'
 import { useMemo, useState } from 'react'
@@ -56,8 +57,8 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
         {
           key: 'enderecos',
           label: 'Meus endereços',
-          icon: <CreditCardOutlined />,
-          onClick: () => navigate('cartoes')
+          icon: <HomeOutlined />,
+          onClick: () => navigate('endereco')
         },
         {
           key: 'cartoes',
@@ -69,7 +70,7 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
           key: 'pedidos',
           label: 'Meus pedidos',
           icon: <ShoppingOutlined />,
-          onClick: () => navigate('pedidos')
+          onClick: () => navigate('compras')
         },
         {
           key: 'favoritos',

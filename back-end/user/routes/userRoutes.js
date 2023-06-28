@@ -20,4 +20,6 @@ router.post('/:idUsuario/endereco', userController.postAddNewAddress);
 router.put('/:idUsuario/endereco/:idEndereco', userController.putEditAddressById);
 router.delete('/:idUsuario/endereco/:idEndereco', userController.deleteAddressById);
 
+router.put('/:idUsuario/senha', userController.putEditPasswordById);
+
 module.exports = router;
