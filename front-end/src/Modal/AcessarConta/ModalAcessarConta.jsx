@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { Row, Col, Modal, Form, Button, Input } from 'antd'
+import { Row, Col, Modal, Form, Button, Input, message } from 'antd'
 import { LockOutlined, UserAddOutlined, UserSwitchOutlined } from '@ant-design/icons'
 import { PiUserListLight } from 'react-icons/pi'
 import { ModalCadastrarConta } from '../CadastrarConta/ModalCadastrarConta'
@@ -10,6 +10,7 @@ import PropTypes from 'prop-types'
 
 export const ModalAcessarConta = ({ visible, closeFn, openLg }) => {
   const [form] = Form.useForm()
+  const [messageApi, contextHolder] = message.useMessage()
   const { setUsuario } = useControleUsuarioContext()
 
   const [loading, setLoading] = useState(false)
@@ -26,14 +27,15 @@ export const ModalAcessarConta = ({ visible, closeFn, openLg }) => {
       setLoading(true)
       const values = await form.validateFields()
       const response = await axios.post('http://localhost:3003/login/', { ...values })
-      if (response.data.length > 0) setUsuario(response.data[0])
+      if (response.data.length < 1) return messageApi.error('Não foi encontrado um usuário com os dados fornecidos.')
+      setUsuario(response.data[0])
       handleCancel()
     } catch (error) {
       console.log(error)
     } finally {
       setLoading(false)
     }
-  }, [form, handleCancel, setUsuario])
+  }, [form, handleCancel, messageApi, setUsuario])
 
   return (
     <Modal
@@ -47,6 +49,7 @@ export const ModalAcessarConta = ({ visible, closeFn, openLg }) => {
       cancelButtonProps={{ style: { display: 'none' } }}
     >
       <Form form={form} layout='vertical'>
+        {contextHolder}
         <Row justify='center'>
           <Col span={24}>
             <Form.Item

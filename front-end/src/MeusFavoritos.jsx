@@ -33,7 +33,7 @@ export const MeusFavoritos = () => {
   const deleteProdutoDosFavoritos = useCallback(async (idProduto) => {
     try {
       setLoading(true)
-      await axios.delete(`http://localhost:3003/favoritos/${usuario.id}/${idProduto}`)
+      await axios.delete(`http://localhost:3003/favoritos/${idProduto}`)
       const favoritosFiltrados = favoritos.filter((f) => f.id !== idProduto)
       setFavoritos(favoritosFiltrados)
     } catch (error) {
@@ -41,7 +41,7 @@ export const MeusFavoritos = () => {
     } finally {
       setLoading(false)
     }
-  }, [favoritos, messageApi, usuario.id])
+  }, [favoritos, messageApi])
 
   const columns = [
     {
@@ -50,19 +50,19 @@ export const MeusFavoritos = () => {
       key: 'id'
     },
     {
+      title: 'Categoria',
+      dataIndex: 'tipo',
+      key: 'tipo'
+    },
+    {
       title: 'Nome',
-      dataIndex: 'nome',
-      key: 'nome'
+      dataIndex: 'produto',
+      key: 'produto'
     },
     {
       title: 'Descrição',
       dataIndex: 'descricao',
       key: 'descricao'
-    },
-    {
-      title: 'Tipo',
-      dataIndex: 'tipo',
-      key: 'tipo'
     },
     {
       title: 'Valor',
@@ -87,7 +87,7 @@ export const MeusFavoritos = () => {
                 type="text"
                 title="Excluir"
                 icon={<DeleteFilled style={{color: '#ff4d4f'}} />}  
-                onClick={() => deleteProdutoDosFavoritos(record)}
+                onClick={() => deleteProdutoDosFavoritos(record.id)}
               />
             </Col>
           </Row>

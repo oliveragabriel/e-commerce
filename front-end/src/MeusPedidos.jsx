@@ -21,14 +21,14 @@ export const MeusPedidos = () => {
       key: 'id'
     },
     {
+      title: 'Categoria',
+      dataIndex: 'tipo',
+      key: 'tipo'
+    },
+    {
       title: 'Produto',
       dataIndex: 'nome',
       key: 'nome'
-    },
-    {
-      title: 'Tipo de Produto',
-      dataIndex: 'tipo',
-      key: 'tipo'
     },
     {
       title: 'Descrição',
@@ -52,7 +52,7 @@ export const MeusPedidos = () => {
   const getPedidosPorUsuario = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:3003/favoritos/${usuario.id}`)
+      const response = await axios.get(`http://localhost:3003/compras/${usuario.id}`)
       if (response?.data?.result?.length > 0) {
         const resultadoListaDePedidos = response.data.result
         setPedidos(resultadoListaDePedidos)
