@@ -4,13 +4,19 @@ import PropTypes from 'prop-types'
 export const ControleUsuarioContext = createContext({})
 
 export function ControleUsuarioContextProvider ({ children }) {
-    const [usuario, setUsuario] = useState({})
+    const [loggedUser, setLoggedUser] = useState({})
+    const [countriesList, setCountriesList] = useState([])
+    const [statesList, setStatesList] = useState([])
 
   return (
     <ControleUsuarioContext.Provider
       value={{
-        usuario,
-        setUsuario
+        loggedUser,
+        statesList,
+        countriesList,
+        setLoggedUser,
+        setStatesList,
+        setCountriesList
       }}
     >
       {children}

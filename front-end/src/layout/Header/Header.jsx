@@ -29,7 +29,7 @@ const StyledMenu = styled(Menu)`
 `
 
 export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
-  const { usuario, setUsuario } = useControleUsuarioContext()
+  const { loggedUser, setLoggedUser } = useControleUsuarioContext()
   const navigate = useNavigate()
 
   const [exibirTelaParaAcessarConta, setExibirTelaParaAcessarConta] = useState(false)
@@ -39,7 +39,7 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
       label: (
         <Row gutter={[8,8]}>
           <Col>
-            {`Olá, ${usuario?.nome}`}
+            {`Olá, ${loggedUser?.nome}`}
           </Col>
           <Col>
             <CaretDownOutlined />
@@ -83,16 +83,16 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
           label: 'Sair',
           icon: <LogoutOutlined />,
           onClick: () => {
-            setUsuario({})
+            setLoggedUser({})
             navigate('home')
           }
         }
       ],
     }
-  ], [navigate, setUsuario, usuario?.nome])
+  ], [navigate, setLoggedUser, loggedUser?.nome])
 
   const greetings = useMemo(() => {
-    return usuario?.nome 
+    return loggedUser?.nome 
     ? (
       <StyledMenu 
         mode="horizontal" 
@@ -100,10 +100,10 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
       />
     ) 
     : 'Olá, faça seu login'
-  }, [items, usuario?.nome])
+  }, [items, loggedUser?.nome])
 
   const renderUserOptions = useMemo(() => {
-    if (usuario?.nome) {
+    if (loggedUser?.nome) {
       return (
         <Row>
           <Col>
@@ -123,7 +123,7 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
         {greetings}
       </Button>
     )
-  }, [greetings, usuario?.nome])
+  }, [greetings, loggedUser?.nome])
 
   const themeModeStyle = systemAtDarkMode ? { height: '7vh' } : { height: '7vh', backgroundColor: '#4682B4' }
 

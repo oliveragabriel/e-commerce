@@ -4,18 +4,37 @@ import { Row, Col, message, Button, Table } from 'antd'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 import { Typography } from 'antd';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
+import { ModalGerenciarEndereco } from './Modal/GerenciarEndereco/GerenciarEndereco';
 
 const { Title } = Typography;
 
 export const MeusEnderecos = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const { usuario } = useControleUsuarioContext()
+  const { loggedUser } = useControleUsuarioContext()
 
-  // eslint-disable-next-line no-unused-vars
   const [exibirTelaParaAdicionarEndereco, setExibirTelaParaAdicionarEndereco] = useState(false)
 
   const [loading, setLoading] = useState(false)
-  const [addresses, setAddresses] = useState([])
+  const [enderecos, setEnderecos] = useState([])
+  const [enderecoSendoEditado, setEnderecoSendoEditado] = useState(undefined)
+
+  const handleModalEndereco = useCallback(async (endereco) => {
+    setEnderecoSendoEditado(endereco)
+    setExibirTelaParaAdicionarEndereco(true)
+  }, [])
+
+  const deleteEnderecoDoUsuario = useCallback(async (idEndereco) => {
+    try {
+      setLoading(true)
+      await axios.delete(`http://localhost:3003/usuario/${loggedUser.id}/endereco/${idEndereco}`)
+      const enderecosFiltrados = enderecos.filter((f) => f.id !== idEndereco)
+      setEnderecos(enderecosFiltrados)
+    } catch (error) {
+      messageApi.error('Não foi possível remover o produto da lista de favoritos.')
+    } finally {
+      setLoading(false)
+    }
+  }, [enderecos, messageApi, loggedUser.id])
 
   const columns = [
     {
@@ -57,7 +76,6 @@ export const MeusEnderecos = () => {
       title: 'Ações',
       key: 'acoes',
       render: (record) => {
-        console.log(record)
         return (
           <Row gutter={8} justify='center'>
             <Col>
@@ -65,7 +83,7 @@ export const MeusEnderecos = () => {
                 type="text"
                 title="Editar"
                 icon={<EditFilled style={{color: '#1677ff'}} />} 
-                onClick={() => {}}
+                onClick={() => handleModalEndereco(record)}
               />
             </Col>
             <Col>
@@ -73,7 +91,7 @@ export const MeusEnderecos = () => {
                 type="text"
                 title="Excluir"
                 icon={<DeleteFilled style={{color: '#ff4d4f'}} />}  
-                onClick={() => {}}
+                onClick={() => deleteEnderecoDoUsuario(record.id)}
               />
             </Col>
           </Row>
@@ -82,50 +100,57 @@ export const MeusEnderecos = () => {
     }
   ]
 
-  const getUserAddresses = useCallback(async () => {
+  const getEnderecoPorUsuario = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:3003/usuario/${usuario.id}/endereco`)
+      const response = await axios.get(`http://localhost:3003/usuario/${loggedUser.id}/endereco`)
       if (response?.data?.result?.length > 0) {
         const usuario = response.data.result
-        setAddresses(usuario)
+        setEnderecos(usuario)
       }
     } catch (error) {
       messageApi.error('Não foi possível encontrar os endereços do usuário.')
     } finally {
       setLoading(false)
     }
-  }, [messageApi, usuario.id])
+  }, [messageApi, loggedUser.id])
 
   useEffect(() => {
-    getUserAddresses()
-  }, [getUserAddresses])
+    getEnderecoPorUsuario()
+  }, [getEnderecoPorUsuario])
   
 
   return (
     <div style={{ margin: 8, padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
       {contextHolder}
-        <Row gutter={[24,24]}>
-          <Col span={24}>
-            <Title level={3}>Meus endereços</Title>
-          </Col>
-          <Col span={24}>
-            <Button 
-              style={{  marginRight: 6 }}
-              type='primary'
-              disabled={loading}
-              onClick={() => setExibirTelaParaAdicionarEndereco(true)}
-            >
-              Adicionar Endereço
-            </Button>
-          </Col>
-          <Col span={24}>
-            <Table
-              columns={columns}
-              dataSource={addresses}
-            />
-          </Col>
-        </Row>
+      <Row gutter={[24,24]}>
+        <Col span={24}>
+          <Title level={3}>Meus endereços</Title>
+        </Col>
+        <Col span={24}>
+          <Button 
+            style={{  marginRight: 6 }}
+            type='primary'
+            disabled={loading}
+            onClick={() => handleModalEndereco()}
+          >
+            Adicionar Endereço
+          </Button>
+          <ModalGerenciarEndereco
+            address={enderecoSendoEditado}
+            visible={exibirTelaParaAdicionarEndereco} 
+            closeFn={() => setExibirTelaParaAdicionarEndereco(false)}
+          />
+        </Col>
+        <Col span={24}>
+          <Table
+            rowKey={'id'}
+            loading={loading}
+            columns={columns}
+            dataSource={enderecos}
+          />
+        </Col>
+      </Row>
     </div>
   )
 }

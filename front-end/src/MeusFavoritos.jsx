@@ -10,7 +10,7 @@ const { Title } = Typography;
 
 export const MeusFavoritos = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const { usuario } = useControleUsuarioContext()
+  const { loggedUser } = useControleUsuarioContext()
 
   const [loading, setLoading] = useState(false)
   const [favoritos, setFavoritos] = useState([])
@@ -18,7 +18,7 @@ export const MeusFavoritos = () => {
   const getFavoritosPorUsuario = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:3003/favoritos/${usuario.id}`)
+      const response = await axios.get(`http://localhost:3003/favoritos/${loggedUser.id}`)
       if (response?.data?.result?.length > 0) {
         const resultadoListaDeFavoritos = response.data.result
         setFavoritos(resultadoListaDeFavoritos)
@@ -28,7 +28,7 @@ export const MeusFavoritos = () => {
     } finally {
       setLoading(false)
     }
-  }, [messageApi, usuario.id])
+  }, [messageApi, loggedUser.id])
 
   const deleteProdutoDosFavoritos = useCallback(async (idProduto) => {
     try {
@@ -104,18 +104,19 @@ export const MeusFavoritos = () => {
   return (
     <div style={{ margin: 8, padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
       {contextHolder}
-        <Row gutter={[24,24]}>
-          <Col span={24}>
-            <Title level={3}>Meus favoritos</Title>
-          </Col>
-          <Col span={24}>
-            <Table
-              loading={loading}
-              columns={columns}
-              dataSource={favoritos}
-            />
-          </Col>
-        </Row>
+      <Row gutter={[24,24]}>
+        <Col span={24}>
+          <Title level={3}>Meus favoritos</Title>
+        </Col>
+        <Col span={24}>
+          <Table
+            rowKey={'id'}
+            loading={loading}
+            columns={columns}
+            dataSource={favoritos}
+          />
+        </Col>
+      </Row>
     </div>
   )
 }

@@ -11,7 +11,7 @@ import PropTypes from 'prop-types'
 export const ModalAcessarConta = ({ visible, closeFn, openLg }) => {
   const [form] = Form.useForm()
   const [messageApi, contextHolder] = message.useMessage()
-  const { setUsuario } = useControleUsuarioContext()
+  const { setLoggedUser } = useControleUsuarioContext()
 
   const [loading, setLoading] = useState(false)
   const [exibirTelaParaRedefinirSenha, setExibirTelaParaRedefinirSenha] = useState(false)
@@ -28,14 +28,14 @@ export const ModalAcessarConta = ({ visible, closeFn, openLg }) => {
       const values = await form.validateFields()
       const response = await axios.post('http://localhost:3003/login/', { ...values })
       if (response.data.length < 1) return messageApi.error('Não foi encontrado um usuário com os dados fornecidos.')
-      setUsuario(response.data[0])
+      setLoggedUser(response.data[0])
       handleCancel()
     } catch (error) {
       console.log(error)
     } finally {
       setLoading(false)
     }
-  }, [form, handleCancel, messageApi, setUsuario])
+  }, [form, handleCancel, messageApi, setLoggedUser])
 
   return (
     <Modal
