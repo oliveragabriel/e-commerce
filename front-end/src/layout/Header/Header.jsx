@@ -58,7 +58,7 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
           key: 'enderecos',
           label: 'Meus endereços',
           icon: <HomeOutlined />,
-          onClick: () => navigate('endereco')
+          onClick: () => navigate('enderecos')
         },
         {
           key: 'cartoes',

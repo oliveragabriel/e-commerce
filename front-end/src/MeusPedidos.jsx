@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Row, Col, message, Table } from 'antd'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 import { Typography } from 'antd';
+import { formatarValorMonetario } from './functions';
 
 const { Title } = Typography;
 
@@ -15,7 +16,7 @@ export const MeusPedidos = () => {
 
   const columns = [
     {
-      title: 'Código do Pedido',
+      title: 'Código',
       dataIndex: 'id',
       key: 'id'
     },
@@ -25,6 +26,11 @@ export const MeusPedidos = () => {
       key: 'nome'
     },
     {
+      title: 'Tipo de Produto',
+      dataIndex: 'tipo',
+      key: 'tipo'
+    },
+    {
       title: 'Descrição',
       dataIndex: 'descricao',
       key: 'descricao'
@@ -32,21 +38,27 @@ export const MeusPedidos = () => {
     {
       title: 'Valor',
       dataIndex: 'valor',
-      key: 'valor'
+      key: 'valor',
+      render: (text) => {
+        return (
+          <div>
+            R$ {formatarValorMonetario(text)}
+          </div>
+        )
+      }
     }
   ]
 
   const getPedidosPorUsuario = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:3003/compras/${usuario.id}`)
-      console.log("🚀 ~ getPedidosPorUsuario ~ response:", response)
+      const response = await axios.get(`http://localhost:3003/favoritos/${usuario.id}`)
       if (response?.data?.result?.length > 0) {
-        const resultadoArrayPedidos = response.data.result
-        setPedidos(resultadoArrayPedidos)
+        const resultadoListaDePedidos = response.data.result
+        setPedidos(resultadoListaDePedidos)
       }
     } catch (error) {
-      messageApi.error('Não foi possível encontrar os pedidos do usuário.')
+      messageApi.error('Não foi possível encontrar o histórico de pedidos do usuário.')
     } finally {
       setLoading(false)
     }
@@ -56,7 +68,6 @@ export const MeusPedidos = () => {
     getPedidosPorUsuario()
   }, [getPedidosPorUsuario])
   
-
   return (
     <div style={{ margin: 8, padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
       {contextHolder}

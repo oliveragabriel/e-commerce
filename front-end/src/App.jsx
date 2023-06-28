@@ -8,6 +8,8 @@ import { MeuPerfil } from './MeuPerfil'
 import './reset.css'
 import { MeusEnderecos } from './MeusEnderecos'
 import { MeusPedidos } from './MeusPedidos'
+import { MeusCartoes } from './MeusCartoes'
+import { MeusFavoritos } from './MeusFavoritos'
 
 function App() {
   const [systemAtDarkMode, setSystemAtDarkMode] = useState(false)
@@ -33,10 +35,10 @@ function App() {
                   <Route path="/" element={<div>/</div>} />
                   <Route path="/home" element={<div>home</div>} />
                   <Route path="/perfil" element={<MeuPerfil />} />
-                  <Route path="/endereco" element={<MeusEnderecos />} />
-                  <Route path="/cartoes" element={<div>meus cartoes</div>} />
+                  <Route path="/enderecos" element={<MeusEnderecos />} />
+                  <Route path="/cartoes" element={<MeusCartoes />} />
                   <Route path="/compras" element={<MeusPedidos />} />
-                  <Route path="/favoritos" element={<div>meus favoritos</div>} />
+                  <Route path="/favoritos" element={<MeusFavoritos/>} />
               </Routes>
             </Card>
           </Layout.Content>
