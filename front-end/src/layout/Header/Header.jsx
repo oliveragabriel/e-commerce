@@ -13,12 +13,13 @@ import { styled } from 'styled-components'
 import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext'
 import { ModalAcessarConta } from '../../Modal/AcessarConta/ModalAcessarConta'
 import { BsSunFill } from 'react-icons/bs';
-import { RiMoonClearFill } from 'react-icons/ri'
+import { RiMoonClearFill, RiShoppingCart2Fill } from 'react-icons/ri'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 
 const StyledMenu = styled(Menu)`
-  background-color: transparent;
+  border-radius: 30px;
+  background-color: midnightblue;
   color: #FFFFFF;
   :hover {
     color: #FFFFFF;
@@ -115,42 +116,36 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
       )
     }
     return (
-      <Button 
-        type='text' 
-        style={{ color: '#FFFFFF' }} 
-        onClick={() => setExibirTelaParaAcessarConta(true)}
-      >
-        {greetings}
-      </Button>
+      <div style={{ borderRadius: '30px', backgroundColor: 'midnightblue' }} >
+        <Button 
+          type='text' 
+          style={{ color: '#FFFFFF' }} 
+          onClick={() => setExibirTelaParaAcessarConta(true)}
+        >
+          {greetings}
+        </Button>
+      </div>
     )
   }, [greetings, loggedUser?.nome])
 
-  const themeModeStyle = systemAtDarkMode ? { height: '7vh' } : { height: '7vh', backgroundColor: '#4682B4' }
+  const themeModeStyle = systemAtDarkMode ? { height: '7vh' } : { height: '7vh', backgroundColor: '#1677ff' }
 
   return (
     <Layout.Header style={themeModeStyle}>
       <Row justify='end' gutter={[24,24]}>
-        <Col>
-          {renderUserOptions}
-          <ModalAcessarConta 
-            visible={exibirTelaParaAcessarConta} 
-            closeFn={() => setExibirTelaParaAcessarConta(false)}
-            openLg={() => setExibirTelaParaAcessarConta(true)}
-          />
-        </Col>
-        <Col style={{ display: 'flex' }}>
+        <Col style={{ display: 'flex', cursor: 'pointer' }}>
           <div onClick={() => setSystemAtDarkMode(!systemAtDarkMode)} style={{ display: 'flex' }}>
             {
               systemAtDarkMode 
               ? (
-                <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center', marginRight: 12 }}>
                   <Tooltip title='Light Mode'>
                     <BsSunFill style={{ fontSize: 22, color: '#F8DE7E' }}/> 
                   </Tooltip>
                 </div>
               )
               : (
-                <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center', marginRight: 12 }}>
                   <Tooltip title='Dark Mode'>
                     <RiMoonClearFill style={{ fontSize: 22, color: ' #F6F1D5 ' }} />
                   </Tooltip>
@@ -158,6 +153,19 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
               )
             }
           </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center', marginLeft: 12 }}>
+            <Tooltip title='Carrinho de Compras'>
+              <RiShoppingCart2Fill style={{ fontSize: 22, color: '#FFFFFF' }}/>
+            </Tooltip>
+          </div>
+        </Col>
+        <Col>
+          {renderUserOptions}
+          <ModalAcessarConta 
+            visible={exibirTelaParaAcessarConta} 
+            closeFn={() => setExibirTelaParaAcessarConta(false)}
+            openLg={() => setExibirTelaParaAcessarConta(true)}
+          />
         </Col>
       </Row>
     </Layout.Header>

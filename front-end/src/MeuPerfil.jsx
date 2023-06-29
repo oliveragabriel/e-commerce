@@ -14,7 +14,7 @@ const { Title } = Typography;
 export const MeuPerfil = () => {
   const [form] = Form.useForm()
   const [messageApi, contextHolder] = message.useMessage()
-  const { usuario, setUsuario } = useControleUsuarioContext()
+  const { loggedUser, setLoggedUser } = useControleUsuarioContext()
 
   const [exibirTelaParaGerenciarSenha, setExibirTelaParaGerenciarSenha] = useState(false)
 
@@ -30,21 +30,21 @@ export const MeuPerfil = () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      const response = await axios.put(`http://localhost:3003/usuario/${usuario.id}`, {...values, hasContato})
+      const response = await axios.put(`http://localhost:3003/usuario/${loggedUser.id}`, {...values, hasContato})
       messageApi.success(response.data.message)
     } catch (error) {
       messageApi.error(error)
     } finally {
       setLoading(false)
     }
-  }, [form, hasContato, messageApi, usuario.id])
+  }, [form, hasContato, messageApi, loggedUser.id])
 
   const getCountriesList = useCallback(async () => {
     try {
       setLoading(true)
       const response = await axios.get('http://localhost:3003/pais/')
       const countriesFormatedToSelectItem = response?.data?.result?.map((country) => ({
-        label: `${country.sigla} - ${country.nome}`,
+        label: country.nome,
         value: country.id
       }))
       setCountries(countriesFormatedToSelectItem)
@@ -58,10 +58,10 @@ export const MeuPerfil = () => {
   const getUserData = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:3003/usuario/${usuario.id}`)
+      const response = await axios.get(`http://localhost:3003/usuario/${loggedUser.id}`)
       if (response?.data?.result?.length > 0) {
         const usuario = response.data.result[0]
-        setUsuario(usuario)
+        setLoggedUser(usuario)
         form.setFieldsValue({...usuario, nacionalidade: usuario?.nacionalidade ? Number(usuario?.nacionalidade) : null })
       }
     } catch (error) {
@@ -69,7 +69,7 @@ export const MeuPerfil = () => {
     } finally {
       setLoading(false)
     }
-  }, [form, messageApi, setUsuario, usuario.id])
+  }, [form, messageApi, setLoggedUser, loggedUser.id])
 
   useEffect(() => {
     getUserData()

@@ -79,6 +79,7 @@ export const MeusFavoritos = () => {
     {
       title: 'Ações',
       key: 'acoes',
+      align: 'center',
       render: (record) => {
         return (
           <Row gutter={8} justify='center'>

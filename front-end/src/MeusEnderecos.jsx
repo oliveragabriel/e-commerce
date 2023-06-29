@@ -43,7 +43,7 @@ export const MeusEnderecos = () => {
       key: 'rua'
     },
     {
-      title: 'Número',
+      title: 'Nº',
       dataIndex: 'numero',
       key: 'numero'
     },
@@ -75,6 +75,7 @@ export const MeusEnderecos = () => {
     {
       title: 'Ações',
       key: 'acoes',
+      align: 'center',
       render: (record) => {
         return (
           <Row gutter={8} justify='center'>
@@ -117,7 +118,7 @@ export const MeusEnderecos = () => {
 
   useEffect(() => {
     getEnderecoPorUsuario()
-  }, [getEnderecoPorUsuario])
+  }, [getEnderecoPorUsuario, exibirTelaParaAdicionarEndereco])
   
 
   return (

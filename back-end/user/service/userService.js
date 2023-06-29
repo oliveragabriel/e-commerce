@@ -97,18 +97,21 @@ exports.getUserAddress = async (idUsuario) => {
     });
 };
 
-exports.postAddNewAddress = async (rua, numero, complemento, bairro, cidade, idEstado, idPais, idUsuario) => {
-  const values = [rua, numero, complemento, bairro, cidade, idEstado, idPais, idUsuario];
+exports.postAddNewAddress = async (rua, numero, complemento, bairro, cidade, estado, pais, idUsuario) => {
+  const validateComplemento = complemento ?? 'Sem Complemento'
+  const values = [rua, numero, validateComplemento, bairro, cidade, estado, pais, idUsuario];
   return await database.query(userQueries.postAddNewAddressQuery, values)
     .then((result) => result.rows)
     .catch((error) => {
+      console.log("🚀 ~ exports.postAddNewAddress= ~ error:", error)
       throw error;
     });
 };
 
-exports.putEditAddressById = async (rua, numero, complemento, bairro, cidade, idEstado, idPais, idUsuario) => {
-  const values = [rua, numero, complemento, bairro, cidade, idEstado, idPais, idUsuario];
-  return await database.query(userQueries.putEditAddressByIdQuery, values)
+exports.putEditAddressById = async (rua, numero, complemento, bairro, cidade, estado, pais, idUsuario, idEndereco) => {
+  const sqlColumnComplemento = complemento ? `, complemento = '${complemento}'` : ''
+  const sqlFinal = `UPDATE endereco SET rua = '${rua}', numero = ${numero}, bairro = '${bairro}', cidade = '${cidade}', estado = ${estado}, pais = ${pais} ${sqlColumnComplemento} WHERE id = ${idEndereco} AND id_usuario = ${idUsuario};`
+  return await database.query(sqlFinal)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;

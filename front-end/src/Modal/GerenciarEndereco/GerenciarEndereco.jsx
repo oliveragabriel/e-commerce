@@ -19,14 +19,11 @@ export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
   const handleSubmit = useCallback(async () => {
     try {
       setLoading(true)
-      const values = await form.validateFields()
-      const bla = await form.getFieldsValue()
-      console.log("🚀 ~ handleSubmit ~ bla:", bla)
-      console.log("🚀 ~ handleSubmit ~ values:", values)
+      const values = await form.getFieldsValue()      
       if (address) {
-        await axios.put(`http://localhost:3003/usuario/${loggedUser.id}/endereco/${address.id}`, values)
+        await axios.put(`http://localhost:3003/usuario/${loggedUser.id}/endereco/${address.id}`, { ...values, pais: 1 })
       } else {
-        await axios.post(`http://localhost:3003/usuario/${loggedUser.id}/endereco`, values)
+        await axios.post(`http://localhost:3003/usuario/${loggedUser.id}/endereco`,  { ...values, pais: 1 })
       }
       messageApi.success('Endereço salvo com sucesso.')
       closeFn()
@@ -44,7 +41,7 @@ export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
       setLoading(true)
       const response = await axios.get('http://localhost:3003/estado/')
       const statesFormatedToSelectItem = response?.data?.result?.map((state) => ({
-        label: `${state.sigla} - ${state.nome}`,
+        label: state.nome,
         value: state.id
       }))
       setStatesList(statesFormatedToSelectItem)
@@ -60,7 +57,7 @@ export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
       setLoading(true)
       const response = await axios.get('http://localhost:3003/pais/')
       const countriesFormatedToSelectItem = response?.data?.result?.map((country) => ({
-        label: `${country.sigla} - ${country.nome}`,
+        label: country.nome,
         value: country.id
       }))
       setCountriesList(countriesFormatedToSelectItem)
@@ -71,8 +68,16 @@ export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
     }
   }, [messageApi, setCountriesList])
 
+  const setInitialValues = useCallback(() => {
+    if (address) {
+      const country = countriesList.find((c) => c.label === address.pais)?.value
+      const state = statesList.find((c) => c.label === address.estado)?.value
+      form.setFieldsValue({ ...address, pais: country, estado: state })
+    }
+  },[address, countriesList, form, statesList])
+
   useEffect(() => {
-    if (address) form.setFieldsValue(address)
+    setInitialValues()
     if (statesList.length < 1) getStatesList()
     if (countriesList.length < 1) getCountriesList()
     return () => {
@@ -211,6 +216,8 @@ export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
               ]}
             >
               <Select
+                defaultValue={{ value: 1, label: 'Brasil' }}
+                disabled
                 allowClear
                 showSearch
                 placeholder="Selecione o País"

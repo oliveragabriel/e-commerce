@@ -136,10 +136,10 @@ exports.getUserAddress = (req, res) => {
 };
 
 exports.postAddNewAddress = (req, res) => {
-  const { rua, numero, complemento, bairro, cidade, idEstado, idPais } = req.body
+  const { rua, numero, complemento, bairro, cidade, estado, pais } = req.body
   const { idUsuario } = req.params
 
-  userService.postAddNewAddress(rua, numero, complemento, bairro, cidade, idEstado, idPais, idUsuario)
+  userService.postAddNewAddress(rua, numero, complemento, bairro, cidade, estado, pais, idUsuario)
     .then(() => {
       res.status(200).send({ message: 'Endereço cadastrado com sucesso!' });
     })
@@ -149,10 +149,10 @@ exports.postAddNewAddress = (req, res) => {
 };
 
 exports.putEditAddressById = (req, res) => {
-  const { rua, numero, complemento, bairro, cidade, idEstado, idPais } = req.body
-  const { idUsuario } = req.params
+  const { rua, numero, complemento, bairro, cidade, estado, pais } = req.body
+  const { idUsuario, idEndereco } = req.params
 
-  userService.putEditAddressById(rua, numero, complemento, bairro, cidade, idEstado, idPais, idUsuario)
+  userService.putEditAddressById(rua, numero, complemento, bairro, cidade, estado, pais, idUsuario, idEndereco)
     .then(() => {
       res.status(200).send({ message: 'Endereço alterado com sucesso!' });
     })

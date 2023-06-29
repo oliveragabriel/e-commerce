@@ -16,8 +16,6 @@ exports.deleteContactByIdQuery = 'DELETE FROM contato WHERE id = $1';
 
 exports.getUserAddressQuery = 'SELECT endereco.id, endereco.rua, endereco.numero, endereco.complemento, endereco.bairro, endereco.cidade, estado.nome as "estado", pais.nome as "pais" FROM endereco INNER JOIN usuario ON usuario.id = endereco.id_usuario LEFT JOIN estado ON estado.id = endereco.estado LEFT JOIN pais ON pais.id = endereco.pais WHERE usuario.id = $1';
 
-exports.postAddNewAddressQuery = 'INSERT INTO endereco( rua, numero, complemento, bairro, cidade, id_estado, id_pais, id_usuario) VALUES ( $1, $2, $3, $4, $5, $6, $7, $8 );'
-
-exports.putEditAddressByIdQuery = 'UPDATE endereco SET rua = $1, numero = $2, complemento = $3, bairro = $4, cidade = $5, id_estado = $6, id_pais = $7 WHERE id_usuario = $8;'
+exports.postAddNewAddressQuery = 'INSERT INTO endereco( rua, numero, complemento, bairro, cidade, estado, pais, id_usuario) VALUES ( $1, $2, $3, $4, $5, $6, $7, $8 );'
 
 exports.deleteAddressByIdQuery = 'DELETE FROM endereco WHERE id = $1';
