@@ -7,7 +7,7 @@ import {
   UserOutlined,
   HomeOutlined
 } from '@ant-design/icons'
-import { Layout, Row, Col, Button, Menu, Tooltip } from 'antd'
+import { Layout, Row, Col, Button, Menu, Tooltip, Input } from 'antd'
 import { useMemo, useState } from 'react'
 import { styled } from 'styled-components'
 import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext'
@@ -133,31 +133,36 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
   return (
     <Layout.Header style={themeModeStyle}>
       <Row justify='end' gutter={[24,24]}>
-        <Col style={{ display: 'flex', cursor: 'pointer' }}>
-          <div onClick={() => setSystemAtDarkMode(!systemAtDarkMode)} style={{ display: 'flex' }}>
-            {
-              systemAtDarkMode 
-              ? (
-                <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center', marginRight: 12 }}>
-                  <Tooltip title='Light Mode'>
-                    <BsSunFill style={{ fontSize: 22, color: '#F8DE7E' }}/> 
-                  </Tooltip>
-                </div>
-              )
-              : (
-                <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center', marginRight: 12 }}>
-                  <Tooltip title='Dark Mode'>
-                    <RiMoonClearFill style={{ fontSize: 22, color: ' #F6F1D5 ' }} />
-                  </Tooltip>
-                </div>
-              )
-            }
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center', marginLeft: 12 }}>
-            <Tooltip title='Carrinho de Compras'>
-              <RiShoppingCart2Fill style={{ fontSize: 22, color: '#FFFFFF' }}/>
-            </Tooltip>
-          </div>
+        <Col style={{ display: 'flex' }} span={18}>
+          <Row justify='space-between' style={{ display: 'flex' }}>
+            <Col style={{ margin: '0px 12px' }}>
+              <Input 
+                placeholder='Busque pelo produto...'
+              />
+            </Col>
+            <Col style={{ display: 'flex' }}>
+              <div onClick={() => setSystemAtDarkMode(!systemAtDarkMode)} style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center', marginRight: 12 }}>
+                {
+                  systemAtDarkMode 
+                  ? (
+                      <Tooltip title='Light Mode'>
+                        <BsSunFill style={{ fontSize: 22, color: '#F8DE7E' }}/> 
+                      </Tooltip>
+                  )
+                  : (
+                      <Tooltip title='Dark Mode'>
+                        <RiMoonClearFill style={{ fontSize: 22, color: ' #F6F1D5 ' }} />
+                      </Tooltip>
+                  )
+                }
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center', marginLeft: 12 }}>
+                <Tooltip title='Carrinho de Compras'>
+                  <RiShoppingCart2Fill style={{ fontSize: 22, color: '#FFFFFF' }}/>
+                </Tooltip>
+              </div>
+            </Col>
+          </Row>
         </Col>
         <Col>
           {renderUserOptions}
