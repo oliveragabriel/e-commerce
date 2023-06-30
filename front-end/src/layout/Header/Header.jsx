@@ -5,9 +5,10 @@ import {
   LogoutOutlined, 
   ShoppingOutlined, 
   UserOutlined,
-  HomeOutlined
+  HomeOutlined,
+  DeleteFilled
 } from '@ant-design/icons'
-import { Layout, Row, Col, Button, Menu, Tooltip, Input } from 'antd'
+import { Layout, Row, Col, Button, Menu, Tooltip, Input, Popover, Badge } from 'antd'
 import { useMemo, useState } from 'react'
 import { styled } from 'styled-components'
 import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext'
@@ -134,33 +135,75 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
     <Layout.Header style={themeModeStyle}>
       <Row justify='end' gutter={[24,24]}>
         <Col style={{ display: 'flex' }} span={18}>
-          <Row justify='space-between' style={{ display: 'flex' }}>
-            <Col style={{ margin: '0px 12px' }}>
-              <Input 
+          <Row justify='space-between' style={{ display: 'flex', width: '100%' }}>
+            <Col style={{ display: 'flex', alignItems: 'center', margin: '0px 12px' }}>
+              <Input.Search 
                 placeholder='Busque pelo produto...'
+                onSearch={() => {}}
               />
             </Col>
-            <Col style={{ display: 'flex' }}>
-              <div onClick={() => setSystemAtDarkMode(!systemAtDarkMode)} style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center', marginRight: 12 }}>
+            <Col style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center' }}>
+              <Button type='text' onClick={() => setSystemAtDarkMode(!systemAtDarkMode)} style={{ marginRight: 12 }}>
                 {
                   systemAtDarkMode 
                   ? (
                       <Tooltip title='Light Mode'>
-                        <BsSunFill style={{ fontSize: 22, color: '#F8DE7E' }}/> 
+                        <BsSunFill style={{ fontSize: 22, color: '#FFFFFF' }}/> 
                       </Tooltip>
                   )
                   : (
                       <Tooltip title='Dark Mode'>
-                        <RiMoonClearFill style={{ fontSize: 22, color: ' #F6F1D5 ' }} />
+                        <RiMoonClearFill style={{ fontSize: 22, color: ' #FFFFFF ' }} />
                       </Tooltip>
                   )
                 }
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center', marginLeft: 12 }}>
-                <Tooltip title='Carrinho de Compras'>
-                  <RiShoppingCart2Fill style={{ fontSize: 22, color: '#FFFFFF' }}/>
-                </Tooltip>
-              </div>
+              </Button>
+              <Popover 
+                content={
+                  <div>
+                    {
+                    Array.from({ length: 4 }).map((_, index) => (
+                    <Row justify='space-between' key={index} style={{ borderBottom: '1px solid rgb(216, 220, 214)', margin: '8px 0px', padding: '10px 0px' }}>
+                      <Col>
+                        <div style={{ width: 156 }}>
+                          Notebook Acer 5000 uashusahuh ashuhasuh
+                        </div>
+                      </Col>
+                      <Col style={{ display: 'flex', alignItems: 'center' }}>
+                          R$ 455.00
+                      </Col>
+                      <Col style={{ display: 'flex', alignItems: 'center' }}>
+                        <Button type='text' title='Remover' onClick={() => {}}>
+                          <DeleteFilled style={{ color: '#ff4d4f' }} />
+                        </Button>
+                      </Col>
+                    </Row>
+                    ))
+                    }
+                    <div style={{ display: 'flex' }}>
+                      <div style={{ fontWeight: 600 }}>Valor Total da Compra:</div>
+                      <div style={{ marginLeft: 16 }}>R$ 545</div>
+                    </div>
+                    <div style={{ margin: '12px' }}>
+                      <Button type='primary' style={{ width: 268 }}>
+                        Concluir Pedido
+                      </Button>
+                    </div>
+                  </div>
+                } 
+                trigger="click" 
+                arrow={false}
+              >
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignContent: 'center', marginLeft: 12 }}>
+                  <Tooltip title='Carrinho de Compras'>
+                    <Badge count={4} style={{color: '#FFFFFF', marginTop: 4, marginRight: 10, boxShadow: 'none'}}>
+                      <Button type='text'>
+                        <RiShoppingCart2Fill style={{ fontSize: 22, color: '#FFFFFF' }}/>
+                      </Button>
+                    </Badge>
+                  </Tooltip>
+                  </div>
+              </Popover>
             </Col>
           </Row>
         </Col>

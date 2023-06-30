@@ -206,7 +206,6 @@ export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
             <Form.Item
               name='pais'
               label='País'
-              hasFeedback
               required
               rules={[
                 { 
