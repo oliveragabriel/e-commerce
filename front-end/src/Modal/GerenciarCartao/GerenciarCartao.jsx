@@ -6,7 +6,7 @@ import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext
 
 export const ModalGerenciarCartao = ({ action, card, visible, closeFn, openLg }) => {
   const [form] = Form.useForm()
-  const { usuario } = useControleUsuarioContext()
+  const { usuarioLogado } = useControleUsuarioContext()
   console.log("🚀 ~ ModalGerenciarCartao ~ card:", card)
 
   const [messageApi, contextHolder] = message.useMessage()
@@ -22,7 +22,7 @@ export const ModalGerenciarCartao = ({ action, card, visible, closeFn, openLg })
       setLoading(true)
       const values = await form.validateFields()
       const { senha } = values
-      const response = await axios.put(`http://localhost:3003/usuario/${usuario.id}/senha`, { senha })
+      const response = await axios.put(`http://localhost:3003/usuario/${usuarioLogado.id}/senha`, { senha })
       messageApi.success(response.data.message)
       closeFn()
       openLg()
@@ -31,7 +31,7 @@ export const ModalGerenciarCartao = ({ action, card, visible, closeFn, openLg })
     } finally {
       setLoading(false)
     }
-  }, [closeFn, form, messageApi, openLg, usuario.id])
+  }, [closeFn, form, messageApi, openLg, usuarioLogado.id])
 
   return (
     <Modal

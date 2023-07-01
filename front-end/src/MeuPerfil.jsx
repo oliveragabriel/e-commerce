@@ -14,7 +14,7 @@ const { Title } = Typography;
 export const MeuPerfil = () => {
   const [form] = Form.useForm()
   const [messageApi, contextHolder] = message.useMessage()
-  const { loggedUser, setLoggedUser } = useControleUsuarioContext()
+  const { usuarioLogado, setUsuarioLogado } = useControleUsuarioContext()
 
   const [exibirTelaParaGerenciarSenha, setExibirTelaParaGerenciarSenha] = useState(false)
 
@@ -30,14 +30,14 @@ export const MeuPerfil = () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      const response = await axios.put(`http://localhost:3003/usuario/${loggedUser.id}`, {...values, hasContato})
+      const response = await axios.put(`http://localhost:3003/usuario/${usuarioLogado.id}`, {...values, hasContato})
       messageApi.success(response.data.message)
     } catch (error) {
       messageApi.error(error)
     } finally {
       setLoading(false)
     }
-  }, [form, hasContato, messageApi, loggedUser.id])
+  }, [form, hasContato, messageApi, usuarioLogado.id])
 
   const getCountriesList = useCallback(async () => {
     try {
@@ -58,10 +58,10 @@ export const MeuPerfil = () => {
   const getUserData = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:3003/usuario/${loggedUser.id}`)
+      const response = await axios.get(`http://localhost:3003/usuario/${usuarioLogado.id}`)
       if (response?.data?.result?.length > 0) {
         const usuario = response.data.result[0]
-        setLoggedUser(usuario)
+        setUsuarioLogado(usuario)
         form.setFieldsValue({...usuario, nacionalidade: usuario?.nacionalidade ? Number(usuario?.nacionalidade) : null })
       }
     } catch (error) {
@@ -69,7 +69,7 @@ export const MeuPerfil = () => {
     } finally {
       setLoading(false)
     }
-  }, [form, messageApi, setLoggedUser, loggedUser.id])
+  }, [form, messageApi, setUsuarioLogado, usuarioLogado.id])
 
   useEffect(() => {
     getUserData()

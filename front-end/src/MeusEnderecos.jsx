@@ -10,7 +10,7 @@ const { Title } = Typography;
 
 export const MeusEnderecos = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const { loggedUser } = useControleUsuarioContext()
+  const { usuarioLogado } = useControleUsuarioContext()
 
   const [exibirTelaParaAdicionarEndereco, setExibirTelaParaAdicionarEndereco] = useState(false)
 
@@ -26,7 +26,7 @@ export const MeusEnderecos = () => {
   const deleteEnderecoDoUsuario = useCallback(async (idEndereco) => {
     try {
       setLoading(true)
-      await axios.delete(`http://localhost:3003/usuario/${loggedUser.id}/endereco/${idEndereco}`)
+      await axios.delete(`http://localhost:3003/usuario/${usuarioLogado.id}/endereco/${idEndereco}`)
       const enderecosFiltrados = enderecos.filter((f) => f.id !== idEndereco)
       setEnderecos(enderecosFiltrados)
     } catch (error) {
@@ -34,7 +34,7 @@ export const MeusEnderecos = () => {
     } finally {
       setLoading(false)
     }
-  }, [enderecos, messageApi, loggedUser.id])
+  }, [enderecos, messageApi, usuarioLogado.id])
 
   const columns = [
     {
@@ -104,7 +104,7 @@ export const MeusEnderecos = () => {
   const getEnderecoPorUsuario = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:3003/usuario/${loggedUser.id}/endereco`)
+      const response = await axios.get(`http://localhost:3003/usuario/${usuarioLogado.id}/endereco`)
       if (response?.data?.result?.length > 0) {
         const usuario = response.data.result
         setEnderecos(usuario)
@@ -114,7 +114,7 @@ export const MeusEnderecos = () => {
     } finally {
       setLoading(false)
     }
-  }, [messageApi, loggedUser.id])
+  }, [messageApi, usuarioLogado.id])
 
   useEffect(() => {
     getEnderecoPorUsuario()

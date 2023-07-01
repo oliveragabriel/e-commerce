@@ -10,7 +10,7 @@ const { Title } = Typography;
 
 export const MeusCartoes = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const { usuario } = useControleUsuarioContext()
+  const { usuarioLogado } = useControleUsuarioContext()
 
   const [exibirTelaParaAdicionarCartao, setExibirTelaParaAdicionarCartao] = useState(false)
   const [acaoRealizadaNaPagina, setAcaoRealizadaNaPagina] = useState([])
@@ -69,7 +69,7 @@ export const MeusCartoes = () => {
   const getCartoesPorUsuario = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:3003/usuario/${usuario.id}/endereco`)
+      const response = await axios.get(`http://localhost:3003/usuario/${usuarioLogado.id}/endereco`)
       if (response?.data?.result?.length > 0) {
         const usuario = response.data.result
         setCartoes(usuario)
@@ -79,7 +79,7 @@ export const MeusCartoes = () => {
     } finally {
       setLoading(false)
     }
-  }, [messageApi, usuario.id])
+  }, [messageApi, usuarioLogado.id])
 
   useEffect(() => {
     getCartoesPorUsuario()

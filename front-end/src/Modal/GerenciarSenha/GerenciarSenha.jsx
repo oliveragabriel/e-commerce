@@ -6,7 +6,7 @@ import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext
 
 export const ModalGerenciarSenha = ({ visible, closeFn, openLg }) => {
   const [form] = Form.useForm()
-  const { loggedUser } = useControleUsuarioContext()
+  const { usuarioLogado } = useControleUsuarioContext()
 
   const [messageApi, contextHolder] = message.useMessage()
   const [loading, setLoading] = useState(false)
@@ -21,7 +21,7 @@ export const ModalGerenciarSenha = ({ visible, closeFn, openLg }) => {
       setLoading(true)
       const values = await form.validateFields()
       const { senha } = values
-      const response = await axios.put(`http://localhost:3003/usuario/${loggedUser.id}/senha`, { senha })
+      const response = await axios.put(`http://localhost:3003/usuario/${usuarioLogado.id}/senha`, { senha })
       messageApi.success(response.data.message)
       closeFn()
       openLg()
@@ -30,7 +30,7 @@ export const ModalGerenciarSenha = ({ visible, closeFn, openLg }) => {
     } finally {
       setLoading(false)
     }
-  }, [closeFn, form, messageApi, openLg, loggedUser.id])
+  }, [closeFn, form, messageApi, openLg, usuarioLogado.id])
 
   return (
     <Modal

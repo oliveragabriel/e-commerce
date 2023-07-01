@@ -1,16 +1,17 @@
 import axios from 'axios'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Row, Col, message, Button, Table } from 'antd'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 import { Typography } from 'antd';
-import { DeleteFilled } from '@ant-design/icons';
-import { formatarValorMonetario } from './functions';
+import { DeleteFilled } from '@ant-design/icons'
+import { converteValorInteiroParaValorMonetario } from './functions'
+import { CardDeProduto } from './components/CardParaProduto/CardDeProduto';
 
-const { Title } = Typography;
+const { Title } = Typography
 
 export const MeusFavoritos = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const { loggedUser } = useControleUsuarioContext()
+  const { usuarioLogado } = useControleUsuarioContext()
 
   const [loading, setLoading] = useState(false)
   const [favoritos, setFavoritos] = useState([])
@@ -18,7 +19,7 @@ export const MeusFavoritos = () => {
   const getFavoritosPorUsuario = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:3003/favoritos/${loggedUser.id}`)
+      const response = await axios.get(`http://localhost:3003/favoritos/${usuarioLogado.id}`)
       if (response?.data?.result?.length > 0) {
         const resultadoListaDeFavoritos = response.data.result
         setFavoritos(resultadoListaDeFavoritos)
@@ -28,7 +29,7 @@ export const MeusFavoritos = () => {
     } finally {
       setLoading(false)
     }
-  }, [messageApi, loggedUser.id])
+  }, [messageApi, usuarioLogado.id])
 
   const deleteProdutoDosFavoritos = useCallback(async (idProduto) => {
     try {
@@ -50,11 +51,6 @@ export const MeusFavoritos = () => {
       key: 'id'
     },
     {
-      title: 'Categoria',
-      dataIndex: 'tipo',
-      key: 'tipo'
-    },
-    {
       title: 'Nome',
       dataIndex: 'produto',
       key: 'produto'
@@ -65,13 +61,18 @@ export const MeusFavoritos = () => {
       key: 'descricao'
     },
     {
+      title: 'Categoria',
+      dataIndex: 'tipo',
+      key: 'tipo'
+    },
+    {
       title: 'Valor',
       dataIndex: 'valor',
       key: 'valor',
       render: (text) => {
         return (
           <div>
-            R$ {formatarValorMonetario(text)}
+            R$ {converteValorInteiroParaValorMonetario(text)}
           </div>
         )
       }
@@ -86,7 +87,7 @@ export const MeusFavoritos = () => {
             <Col>
               <Button 
                 type="text"
-                title="Excluir"
+                title="Remover"
                 icon={<DeleteFilled style={{color: '#ff4d4f'}} />}  
                 onClick={() => deleteProdutoDosFavoritos(record.id)}
               />
@@ -96,6 +97,14 @@ export const MeusFavoritos = () => {
       }
     }
   ]
+
+  const renderCardPorProduto = useMemo(() => {
+    return favoritos.map((p, idx) => {
+      return (
+        <CardDeProduto key={idx} p={p} idx={idx} dlt={true} />
+      )
+    })
+  }, [favoritos])
 
   useEffect(() => {
     getFavoritosPorUsuario()
@@ -108,6 +117,9 @@ export const MeusFavoritos = () => {
       <Row gutter={[24,24]}>
         <Col span={24}>
           <Title level={3}>Meus favoritos</Title>
+        </Col>
+        <Col>
+          {renderCardPorProduto}
         </Col>
         <Col span={24}>
           <Table

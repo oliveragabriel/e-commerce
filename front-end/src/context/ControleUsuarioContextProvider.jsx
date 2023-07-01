@@ -4,19 +4,28 @@ import PropTypes from 'prop-types'
 export const ControleUsuarioContext = createContext({})
 
 export function ControleUsuarioContextProvider ({ children }) {
-    const [loggedUser, setLoggedUser] = useState({})
-    const [countriesList, setCountriesList] = useState([])
-    const [statesList, setStatesList] = useState([])
+    const [usuarioLogado, setUsuarioLogado] = useState({})
+    const [produtosSelecionadosParaCompra, setProdutosSelecionadosParaCompra] = useState([
+      {
+        id: 1,
+        nome: 'Notebook A5 Acer Premium Top sdsadasdasdasdsadsd',
+        valor: 5999
+      }
+    ])
+    const [listaComTodosPaises, setListaComTodosPaises] = useState([])
+    const [listaComTodosEstados, setListaComTodosEstados] = useState([])
 
   return (
     <ControleUsuarioContext.Provider
       value={{
-        loggedUser,
-        statesList,
-        countriesList,
-        setLoggedUser,
-        setStatesList,
-        setCountriesList
+        usuarioLogado,
+        listaComTodosEstados,
+        listaComTodosPaises,
+        produtosSelecionadosParaCompra,
+        setUsuarioLogado,
+        setListaComTodosEstados,
+        setListaComTodosPaises,
+        setProdutosSelecionadosParaCompra
       }}
     >
       {children}

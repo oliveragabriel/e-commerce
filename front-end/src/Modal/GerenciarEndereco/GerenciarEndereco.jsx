@@ -6,7 +6,13 @@ import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext
 
 export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
   const [form] = Form.useForm()
-  const { loggedUser, statesList, countriesList, setStatesList, setCountriesList } = useControleUsuarioContext()
+  const { 
+    usuarioLogado, 
+    listaComTodosEstados, 
+    listaComTodosPaises, 
+    setListaComTodosEstados, 
+    setListaComTodosPaises 
+  } = useControleUsuarioContext()
 
   const [messageApi, contextHolder] = message.useMessage()
   const [loading, setLoading] = useState(false)
@@ -21,9 +27,9 @@ export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
       setLoading(true)
       const values = await form.getFieldsValue()      
       if (address) {
-        await axios.put(`http://localhost:3003/usuario/${loggedUser.id}/endereco/${address.id}`, { ...values, pais: 1 })
+        await axios.put(`http://localhost:3003/usuario/${usuarioLogado.id}/endereco/${address.id}`, { ...values, pais: 1 })
       } else {
-        await axios.post(`http://localhost:3003/usuario/${loggedUser.id}/endereco`,  { ...values, pais: 1 })
+        await axios.post(`http://localhost:3003/usuario/${usuarioLogado.id}/endereco`,  { ...values, pais: 1 })
       }
       messageApi.success('Endereço salvo com sucesso.')
       closeFn()
@@ -32,7 +38,7 @@ export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
     } finally {
       setLoading(false)
     }
-  }, [form, address, messageApi, closeFn, loggedUser.id])
+  }, [form, address, messageApi, closeFn, usuarioLogado.id])
 
   const title = useMemo(() => address ? 'Editar endereço' : 'Adicionar endereço', [address])
 
@@ -44,13 +50,13 @@ export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
         label: state.nome,
         value: state.id
       }))
-      setStatesList(statesFormatedToSelectItem)
+      setListaComTodosEstados(statesFormatedToSelectItem)
     } catch (error) {
       messageApi.error('Não foi possível buscar a lista de estados.')
     } finally {
       setLoading(false)
     }
-  }, [messageApi, setStatesList])
+  }, [messageApi, setListaComTodosEstados])
 
   const getCountriesList = useCallback(async () => {
     try {
@@ -60,26 +66,26 @@ export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
         label: country.nome,
         value: country.id
       }))
-      setCountriesList(countriesFormatedToSelectItem)
+      setListaComTodosPaises(countriesFormatedToSelectItem)
     } catch (error) {
       messageApi.error('Não foi possível buscar a lista de países.')
     } finally {
       setLoading(false)
     }
-  }, [messageApi, setCountriesList])
+  }, [messageApi, setListaComTodosPaises])
 
   const setInitialValues = useCallback(() => {
     if (address) {
-      const country = countriesList.find((c) => c.label === address.pais)?.value
-      const state = statesList.find((c) => c.label === address.estado)?.value
+      const country = listaComTodosPaises.find((c) => c.label === address.pais)?.value
+      const state = listaComTodosEstados.find((c) => c.label === address.estado)?.value
       form.setFieldsValue({ ...address, pais: country, estado: state })
     }
-  },[address, countriesList, form, statesList])
+  },[address, listaComTodosPaises, form, listaComTodosEstados])
 
   useEffect(() => {
     setInitialValues()
-    if (statesList.length < 1) getStatesList()
-    if (countriesList.length < 1) getCountriesList()
+    if (listaComTodosEstados.length < 1) getStatesList()
+    if (listaComTodosPaises.length < 1) getCountriesList()
     return () => {
       form.resetFields()
     }
@@ -198,7 +204,7 @@ export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
                 placeholder="Selecione o Estado"
                 optionFilterProp="children"
                 filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
-                options={statesList}
+                options={listaComTodosEstados}
               />
             </Form.Item>
           </Col>
@@ -222,7 +228,7 @@ export const ModalGerenciarEndereco = ({ address, visible, closeFn }) => {
                 placeholder="Selecione o País"
                 optionFilterProp="children"
                 filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
-                options={countriesList}
+                options={listaComTodosPaises}
               />
             </Form.Item>
           </Col>

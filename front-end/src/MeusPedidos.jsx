@@ -1,15 +1,13 @@
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
-import { Row, Col, message, Table } from 'antd'
+import { Row, Col, message, Table, Typography } from 'antd'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
-import { Typography } from 'antd';
-import { formatarValorMonetario } from './functions';
-
-const { Title } = Typography;
+import { converteValorInteiroParaValorMonetario } from './functions'
+const { Title } = Typography
 
 export const MeusPedidos = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const { loggedUser } = useControleUsuarioContext()
+  const { usuarioLogado } = useControleUsuarioContext()
 
   const [loading, setLoading] = useState(false)
   const [pedidos, setPedidos] = useState([])
@@ -42,7 +40,7 @@ export const MeusPedidos = () => {
       render: (text) => {
         return (
           <div>
-            R$ {formatarValorMonetario(text)}
+            R$ {converteValorInteiroParaValorMonetario(text)}
           </div>
         )
       }
@@ -52,7 +50,7 @@ export const MeusPedidos = () => {
   const getPedidosPorUsuario = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:3003/compras/${loggedUser.id}`)
+      const response = await axios.get(`http://localhost:3003/compras/${usuarioLogado.id}`)
       if (response?.data?.result?.length > 0) {
         const resultadoListaDePedidos = response.data.result
         setPedidos(resultadoListaDePedidos)
@@ -62,7 +60,7 @@ export const MeusPedidos = () => {
     } finally {
       setLoading(false)
     }
-  }, [messageApi, loggedUser.id])
+  }, [messageApi, usuarioLogado.id])
 
   useEffect(() => {
     getPedidosPorUsuario()

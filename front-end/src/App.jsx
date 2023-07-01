@@ -2,7 +2,7 @@ import { Card, ConfigProvider as AntdConfigProvider, Layout, theme } from 'antd'
 import ptBR from 'antd/es/locale/pt_BR'
 import { Header } from './layout/Header/Header'
 import { ControleUsuarioContextProvider } from './context/ControleUsuarioContextProvider'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { MeuPerfil } from './MeuPerfil'
 import './reset.css'
@@ -10,9 +10,22 @@ import { MeusEnderecos } from './MeusEnderecos'
 import { MeusPedidos } from './MeusPedidos'
 import { MeusCartoes } from './MeusCartoes'
 import { MeusFavoritos } from './MeusFavoritos'
+import { Home } from './Home'
 
 function App() {
-  const [systemAtDarkMode, setSystemAtDarkMode] = useState(false)
+  const [systemAtDarkMode, setSystemAtDarkMode] = useState(true)
+  const [screenHeight, setScreenHeight] = useState(0);
+
+  useEffect(() => {
+    function handleResize() {
+      setScreenHeight(window.innerHeight)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   const { defaultAlgorithm, darkAlgorithm } = theme
 
@@ -29,11 +42,11 @@ function App() {
             systemAtDarkMode={systemAtDarkMode}
             setSystemAtDarkMode={setSystemAtDarkMode} 
           />
-          <Layout.Content>
-            <Card style={{ height: '93vh', borderRadius: 0 }}>
+          <Layout.Content style={{ height: screenHeight - 64 }}>
+            <Card style={{ height: '100%', borderRadius: 0 }}>
               <Routes>
-                  <Route path="/" element={<div>/</div>} />
-                  <Route path="/home" element={<div>home</div>} />
+                  <Route path="/" element={<Home />} />
+                  <Route path="/home" element={<Home />} />
                   <Route path="/perfil" element={<MeuPerfil />} />
                   <Route path="/enderecos" element={<MeusEnderecos />} />
                   <Route path="/cartoes" element={<MeusCartoes />} />
