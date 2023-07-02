@@ -23,7 +23,14 @@ export const CardDeProduto = ({ p, idx, dlt, fvt }) => {
       style={{ width: 274 }}
       cover={<CardImagemContainer p={p} dlt={dlt} fvt={fvt} />}
     >
-      <Meta title={recortaTextoParaExibirCompactado(p.produto, 19)} description={recortaTextoParaExibirCompactado(p.descricao, 122)} />
+      <Meta 
+        title={recortaTextoParaExibirCompactado(p.produto, 19)} 
+        description={
+          <div className='description' style={{ height: 132 }}>
+            {recortaTextoParaExibirCompactado(p.descricao, 114)}
+          </div>
+        } 
+      />
       <div 
         style={{ 
           display: 'flex',

@@ -4,7 +4,7 @@ import { Row, Col, message, Button, Table } from 'antd'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 import { Typography } from 'antd';
 import { DeleteFilled, EditFilled } from '@ant-design/icons'
-import { converteValorInteiroParaValorMonetario } from './functions'
+import { converteValorInteiroParaValorMonetario, recortaTextoParaExibirCompactado } from './functions'
 import { ModalGerenciarProduto } from './Modal/GerenciarProduto/GerenciarProduto'
 
 const { Title } = Typography;
@@ -51,7 +51,9 @@ export const GerenciarProdutos = () => {
     {
       title: 'Descrição',
       dataIndex: 'descricao',
-      key: 'descricao'
+      key: 'descricao',
+      width: '50%',
+      render: (text) => recortaTextoParaExibirCompactado(text, 225)
     },
     {
       title: 'Categoria',
