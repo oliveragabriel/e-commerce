@@ -24,18 +24,18 @@ export const GerenciarProdutos = () => {
     setExibirTelaParaGerenciarProduto(true)
   }, [])
 
-  const deleteProduto = useCallback(async (idEndereco) => {
+  const deleteProduto = useCallback(async (idProduto) => {
     try {
       setLoading(true)
-      await axios.delete(`http://localhost:3003/usuario/${usuarioLogado.id}/endereco/${idEndereco}`)
-      const produtosFiltrados = produtos.filter((f) => f.id !== idEndereco)
+      await axios.delete(`http://localhost:3003/produto/${idProduto}`)
+      const produtosFiltrados = produtos.filter((f) => f.id !== idProduto)
       setProdutos(produtosFiltrados)
     } catch (error) {
       messageApi.error('Não foi possível remover o produto da lista de favoritos.')
     } finally {
       setLoading(false)
     }
-  }, [produtos, messageApi, usuarioLogado.id])
+  }, [produtos, messageApi])
 
   const columns = [
     {
@@ -102,10 +102,9 @@ export const GerenciarProdutos = () => {
   const getListaProdutosCadastradosPorUsuario = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:3003/usuario/${usuarioLogado.id}/endereco`)
-      if (response?.data?.result?.length > 0) {
-        const produtos = response.data.result
-        setProdutos(produtos)
+      const response = await axios.get(`http://localhost:3003/produto/usuario/${usuarioLogado.id}`)
+      if (response?.data?.length > 0) {
+        setProdutos(response.data)
       }
     } catch (error) {
       messageApi.error('Não foi possível encontrar os endereços do usuário.')
@@ -120,7 +119,7 @@ export const GerenciarProdutos = () => {
   
 
   return (
-    <div style={{ margin: 8, padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
+    <div style={{ marginTop: '52px', padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
       {contextHolder}
       <Row gutter={[24,24]}>
         <Col span={24}>

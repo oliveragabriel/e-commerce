@@ -7,15 +7,25 @@ exports.listAllTypes = () => {
     .catch((error) => {
       throw error;
     });
-};
+}
 
 exports.getAllProducts = () => {
   return database.query(productQueries.getAllProductsQuery)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;
-    });
-};
+    })
+}
+
+exports.getProductsByUserId = (idUsuario) => {
+  const values = [idUsuario]
+
+  return database.query(productQueries.getProductsByUserId, values)
+    .then((result) => result.rows)
+    .catch((error) => {
+      throw error
+    })
+}
 
 exports.getProductById = (idProduto) => {
   const values = [idProduto];
@@ -52,7 +62,7 @@ exports.putEditProductById = async (nome, descricao, tipo, valor, idProduto) => 
 
 exports.deleteProductById = async (idProduto) => {
   const values = [idProduto];
-  return await database.query(productQueries.deleteUserByIdQuery, values)
+  return await database.query(productQueries.deleteProductByIdQuery, values)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;

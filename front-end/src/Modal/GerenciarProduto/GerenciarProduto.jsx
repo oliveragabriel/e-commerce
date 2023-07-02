@@ -63,7 +63,10 @@ export const ModalGerenciarProduto = ({ product, visible, closeFn }) => {
 
   const setInitialValues = useCallback(() => {
     if (product) {
-      form.setFieldsValue(product)
+      console.log("🚀 ~ setInitialValues ~ product:", product)
+      setImagemFotoUrl(product.foto)
+      setImagemBannerUrl(product.banner)
+      form.setFieldsValue({ ...product, nome: product.produto })
     }
   },[product, form])
 

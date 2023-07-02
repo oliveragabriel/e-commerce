@@ -78,7 +78,7 @@ export const MeuPerfil = () => {
   
 
   return (
-    <div style={{ margin: 8, padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
+    <div style={{ marginTop: '52px', padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
       {contextHolder}
       <Form 
         form={form} 

@@ -74,10 +74,13 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
   }, [systemAtDarkMode])
 
   return (
-    <Layout.Header style={themeModeStyle}>
-      <Row justify='end' gutter={[24,24]}>
-        <Col style={{ display: 'flex' }} span={18}>
-          <Row justify='space-between' style={{ display: 'flex', width: '100%' }}>
+    <Layout.Header style={{ ...themeModeStyle, position: 'fixed', width: '100%', zIndex: 1, paddingInline: 20 }}>
+      <Row justify='space-between' gutter={[24,24]}>
+        <Col onClick={() => navigate('home')}>
+          Home
+        </Col>
+        <Col style={{ display: 'flex', padding: 0 }} span={18}>
+          <Row justify='end' gutter={[24,24]} style={{ display: 'flex', width: '100%' }}>
             <Col style={{ display: 'flex', alignItems: 'center', margin: '0px 12px' }}>
               <Input.Search 
                 placeholder='Busque pelo produto...'
@@ -91,15 +94,15 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
               />
               <CarrinhoDeCompras />
             </Col>
+            <Col>
+              {renderUserOptions}
+              <ModalAcessarConta 
+                visible={exibirTelaParaAcessarConta} 
+                closeFn={() => setExibirTelaParaAcessarConta(false)}
+                openLg={() => setExibirTelaParaAcessarConta(true)}
+              />
+            </Col>
           </Row>
-        </Col>
-        <Col>
-          {renderUserOptions}
-          <ModalAcessarConta 
-            visible={exibirTelaParaAcessarConta} 
-            closeFn={() => setExibirTelaParaAcessarConta(false)}
-            openLg={() => setExibirTelaParaAcessarConta(true)}
-          />
         </Col>
       </Row>
     </Layout.Header>

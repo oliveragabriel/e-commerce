@@ -34,7 +34,7 @@ export const itemsMenu = (navigate, usuarioLogado, deslogarUsuarioDoSistema) => 
     {
       key: 4,
       label: 'Meus pedidos',
-      icon: <BiTransfer style={{ color: '#FFFFFF' }}/>,
+      icon: <BiTransfer />,
       onClick: () => navigate('compras')
     },
     {

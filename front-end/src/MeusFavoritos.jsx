@@ -107,13 +107,13 @@ export const MeusFavoritos = () => {
   
 
   return (
-    <div style={{ margin: 8, padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
+    <div style={{ marginTop: '52px', padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
       {contextHolder}
       <Row gutter={[24,24]}>
         <Col span={24}>
           <Title level={3}>Meus favoritos</Title>
         </Col>
-        <Col style={{ display: 'flex', columnGap: '10px' }}>
+        <Col style={{ display: 'flex', columnGap: '10px', overflow: 'auto', margin: '0px 16px' }}>
           {renderCardPorProduto}
         </Col>
         <Col span={24}>

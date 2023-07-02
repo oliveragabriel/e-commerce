@@ -8,6 +8,7 @@ export const Home = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const { usuarioLogado } = useControleUsuarioContext()
   const [loading, setLoading] = useState(false)
+  const [screenHeight, setScreenHeight] = useState(0)
   const [listaComTodosProdutos, setListaComTodosProdutos] = useState([])
 
   const getListaProdutos = useCallback(async () => {
@@ -34,6 +35,10 @@ export const Home = () => {
     }
   }, [messageApi, usuarioLogado.id])
 
+  const handleResizeBanner = useCallback(() => {
+    setScreenHeight(window.innerHeight)
+  }, [])
+
   const renderCardPorProduto = useMemo(() => {
     return listaComTodosProdutos?.map((p, idx) => {
       return (
@@ -51,16 +56,36 @@ export const Home = () => {
     })
   }, [handleAdicionarProdutoComoFavorito, listaComTodosProdutos, messageApi, usuarioLogado?.id])
 
+  const bannerHeight = useMemo(() => screenHeight - 480, [screenHeight])
+
+  const renderBannerPorProduto = useMemo(() => {
+    return listaComTodosProdutos?.map((p, idx) => {
+      return (
+        <div key={idx} className='banner-container'>
+          <img alt="product-banner" height={bannerHeight} src={p?.banner} style={{ width: '100%' }} />
+        </div>
+      )
+    })
+  }, [listaComTodosProdutos, bannerHeight])
+
   useEffect(() => {
-    getListaProdutos()
-  }, [getListaProdutos])
+    getListaProdutos() 
+    handleResizeBanner()
+    window.addEventListener('resize', handleResizeBanner)
+    return () => {
+      window.removeEventListener('resize', handleResizeBanner)
+    }
+  }, [getListaProdutos, handleResizeBanner])
   
   return (
-      <div style={{ margin: 8, padding: 16 }}>
+      <div style={{ margin: '32px 0px 0px 0px', padding: 16 }}>
         {contextHolder}
-        <Carousel>
-        </Carousel>
-        <div style={{ display: 'flex', columnGap: '10px', overflow: 'auto' }}>
+        <div style={{ display: 'block', marginBottom: 10 }}>
+          <Carousel autoplay>
+            {renderBannerPorProduto}
+          </Carousel>
+        </div>
+        <div style={{ display: 'flex', columnGap: '10px', overflow: 'auto', paddingBottom: 10 }}>
           {renderCardPorProduto}
         </div>
       </div>

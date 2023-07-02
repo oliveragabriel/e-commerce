@@ -34,7 +34,7 @@ export const CardImagemContainer = ({ p, dlt, fvt }) => {
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       {renderBtn}
       <div className='image-container' style={{ marginTop: '10px' }}>
-        <img alt="example" height={120} src={p?.foto} style={{ width: '100%' }} />
+        <img alt="product-image" height={120} src={p?.foto} style={{ width: '100%' }} />
       </div>
     </div>
   )
