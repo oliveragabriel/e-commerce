@@ -20,8 +20,8 @@ export const MeusFavoritos = () => {
     try {
       setLoading(true)
       const response = await axios.get(`http://localhost:3003/favoritos/${usuarioLogado.id}`)
-      if (response?.data?.result?.length > 0) {
-        const resultadoListaDeFavoritos = response.data.result
+      if (response?.data?.length > 0) {
+        const resultadoListaDeFavoritos = response.data
         setFavoritos(resultadoListaDeFavoritos)
       }
     } catch (error) {
@@ -45,11 +45,6 @@ export const MeusFavoritos = () => {
   }, [favoritos, messageApi])
 
   const columns = [
-    {
-      title: 'Código',
-      dataIndex: 'id',
-      key: 'id'
-    },
     {
       title: 'Nome',
       dataIndex: 'produto',
@@ -101,10 +96,10 @@ export const MeusFavoritos = () => {
   const renderCardPorProduto = useMemo(() => {
     return favoritos.map((p, idx) => {
       return (
-        <CardDeProduto key={idx} p={p} idx={idx} dlt={true} />
+        <CardDeProduto key={idx} p={p} idx={idx} dlt={deleteProdutoDosFavoritos} />
       )
     })
-  }, [favoritos])
+  }, [favoritos, deleteProdutoDosFavoritos])
 
   useEffect(() => {
     getFavoritosPorUsuario()
@@ -118,7 +113,7 @@ export const MeusFavoritos = () => {
         <Col span={24}>
           <Title level={3}>Meus favoritos</Title>
         </Col>
-        <Col>
+        <Col style={{ display: 'flex', columnGap: '10px' }}>
           {renderCardPorProduto}
         </Col>
         <Col span={24}>

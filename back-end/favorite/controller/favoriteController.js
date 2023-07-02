@@ -1,20 +1,33 @@
 const favoriteService = require('../service/favoriteService');
 
-exports.listFavoritesProducts = (req, res) => {
+exports.listFavoriteProductsByUserId = (req, res) => {
   const idUsuario = req.params.idUsuario
-  favoriteService.listFavoritesProducts(idUsuario)
+
+  favoriteService.listFavoriteProductsByUserId(idUsuario)
     .then((result) => {
-      res.status(200).send({ result });
+      res.status(200).send(result);
     })
     .catch((error) => {
       res.status(500).send({ error });
     });
 };
 
-exports.deleteFavoriteProductById = (req, res) => {
+exports.addProductAsFavorite = async (req, res) => {
+  const { params } = req
+
+  favoriteService.addProductAsFavorite(params)
+    .then(() => {
+      res.status(200).send({ message: 'Produto cadastrado como favorito com sucesso!' });
+    })
+    .catch((error) => {
+      res.status(500).send({ error });
+    });
+};
+
+exports.deleteProductFromFavoriteListById = (req, res) => {
   const idFavorito = req.params.idFavorito;
 
-  favoriteService.deleteFavoriteProductById(idFavorito)
+  favoriteService.deleteProductFromFavoriteListById(idFavorito)
     .then(() => {
       res.status(200).send({ message: 'Produto removido da lista de favoritos com sucesso!' });
     })

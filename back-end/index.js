@@ -5,6 +5,7 @@ const port = process.env.PORT
 const cors = require('cors');
 
 const app = express()
+app.use(express.json({ limit: '100mb' }))
 app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(bodyParser.json())
 

@@ -9,6 +9,14 @@ exports.listAllTypes = () => {
     });
 };
 
+exports.getAllProducts = () => {
+  return database.query(productQueries.getAllProductsQuery)
+    .then((result) => result.rows)
+    .catch((error) => {
+      throw error;
+    });
+};
+
 exports.getProductById = (idProduto) => {
   const values = [idProduto];
 
@@ -19,18 +27,23 @@ exports.getProductById = (idProduto) => {
     });
 };
 
-exports.postAddNewProduct = async (nome, descricao, tipo, valor, idUsuario) => {
-  const values = [nome, descricao, tipo, valor, idUsuario];
-  return await database.query(userQueries.postAddNewUserQuery, values)
+exports.postAddNewProduct = async (body) => {
+  const { nome, descricao, categoria, valor, banner, foto, idUsuario } = body
+  const sqlColumnBanner = banner === '' ? '' : ', banner'
+  const sqlColumnFoto = foto === '' ? '' : ', foto'
+  const sqlValueBanner = banner === '' ? '' : `, '${banner}'`
+  const sqlValueFoto = foto === '' ? '' : `, '${foto}'`
+  const sqlFinal = `INSERT INTO produto( nome, descricao, tipo, valor, vendedor ${sqlColumnFoto} ${sqlColumnBanner} ) VALUES ( '${nome}', '${descricao}', ${categoria}, ${valor}, ${idUsuario} ${sqlValueFoto} ${sqlValueBanner} );`
+  return await database.query(sqlFinal)
     .then((result) => result.rows)
     .catch((error) => {
-      throw error;
-    });
-};
+      throw error
+    })
+}
 
 exports.putEditProductById = async (nome, descricao, tipo, valor, idProduto) => {
   const values = [nome, descricao, tipo, valor, idProduto];
-  return await database.query(userQueries.putEditUserByIdQuery, values)
+  return await database.query(productQueries.putEditUserByIdQuery, values)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;
@@ -39,7 +52,7 @@ exports.putEditProductById = async (nome, descricao, tipo, valor, idProduto) => 
 
 exports.deleteProductById = async (idProduto) => {
   const values = [idProduto];
-  return await database.query(userQueries.deleteUserByIdQuery, values)
+  return await database.query(productQueries.deleteUserByIdQuery, values)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;

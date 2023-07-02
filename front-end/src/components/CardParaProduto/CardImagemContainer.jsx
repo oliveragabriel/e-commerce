@@ -1,32 +1,47 @@
-import acerAspire from '../../assets/images/acer-aspire-3.png'
 import PropTypes from 'prop-types'
 import { Button } from 'antd'
 import { useMemo } from 'react'
-import { DeleteFilled } from '@ant-design/icons'
+import { DeleteFilled, HeartFilled } from '@ant-design/icons'
 
-export const CardImagemContainer = ({ dlt }) => {
+export const CardImagemContainer = ({ p, dlt, fvt }) => {
 
   const renderBtn = useMemo(() => { 
-    if(!dlt) return null
+    if(!dlt) {
+      return (
+        <div style={{ position: 'absolute', right: 10, top: 10 }}>
+          <Button 
+            type='text'
+            icon={<HeartFilled style={{color: '#ff4d4f'}} />} 
+            title='Favoritar'
+            onClick={() => fvt(p.id)}
+          />
+        </div>
+      )
+    }
     return (
       <div style={{ position: 'absolute', right: 10, top: 10 }}>
         <Button 
           type='text'
           icon={<DeleteFilled style={{color: '#ff4d4f'}} />} 
           title='Remover'
+          onClick={() => dlt(p.id)}
         />
       </div>
     )
-  }, [dlt])
+  }, [dlt, fvt, p.id])
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       {renderBtn}
-      <img alt="example" src={acerAspire} style={{ width: '100%' }} />
+      <div className='image-container' style={{ marginTop: '10px' }}>
+        <img alt="example" height={120} src={p?.foto} style={{ width: '100%' }} />
+      </div>
     </div>
   )
 }
 
 CardImagemContainer.propTypes = {
-  dlt: PropTypes.bool
+  p: PropTypes.any.isRequired,
+  dlt: PropTypes.func,
+  fvt: PropTypes.func
 }

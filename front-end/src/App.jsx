@@ -11,6 +11,7 @@ import { MeusPedidos } from './MeusPedidos'
 import { MeusCartoes } from './MeusCartoes'
 import { MeusFavoritos } from './MeusFavoritos'
 import { Home } from './Home'
+import { GerenciarProdutos } from './GerenciarProdutos'
 
 function App() {
   const [systemAtDarkMode, setSystemAtDarkMode] = useState(true)
@@ -52,6 +53,7 @@ function App() {
                   <Route path="/cartoes" element={<MeusCartoes />} />
                   <Route path="/compras" element={<MeusPedidos />} />
                   <Route path="/favoritos" element={<MeusFavoritos/>} />
+                  <Route path="/produtos" element={<GerenciarProdutos />} />
               </Routes>
             </Card>
           </Layout.Content>

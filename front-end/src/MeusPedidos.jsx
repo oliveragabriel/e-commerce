@@ -19,11 +19,6 @@ export const MeusPedidos = () => {
       key: 'id'
     },
     {
-      title: 'Categoria',
-      dataIndex: 'tipo',
-      key: 'tipo'
-    },
-    {
       title: 'Produto',
       dataIndex: 'nome',
       key: 'nome'
@@ -32,6 +27,11 @@ export const MeusPedidos = () => {
       title: 'Descrição',
       dataIndex: 'descricao',
       key: 'descricao'
+    },
+    {
+      title: 'Categoria',
+      dataIndex: 'tipo',
+      key: 'tipo'
     },
     {
       title: 'Valor',
