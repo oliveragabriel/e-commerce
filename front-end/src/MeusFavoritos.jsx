@@ -10,7 +10,7 @@ const { Title } = Typography
 
 export const MeusFavoritos = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const { usuarioLogado, setProdutosSelecionadosParaCompra } = useControleUsuarioContext()
+  const { usuarioLogado } = useControleUsuarioContext()
 
   const [loading, setLoading] = useState(false)
   const [favoritos, setFavoritos] = useState([])

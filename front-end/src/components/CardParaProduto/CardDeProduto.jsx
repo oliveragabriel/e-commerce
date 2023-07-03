@@ -12,7 +12,7 @@ export const CardDeProduto = ({ p, idx, dlt, fvt }) => {
 
   const handleAdicionaParaCarrinhoDeCompra = useCallback(() => {
     const produtosSelecionadosAntes = produtosSelecionadosParaCompra
-    const novaListaProdutosSelecionados = [ ...produtosSelecionadosAntes, p ]
+    const novaListaProdutosSelecionados = [ ...produtosSelecionadosAntes, { ...p, id: p.idProduto, nome: p.produto } ]
     setProdutosSelecionadosParaCompra(novaListaProdutosSelecionados)
   }, [p, produtosSelecionadosParaCompra, setProdutosSelecionadosParaCompra])
   
@@ -20,7 +20,7 @@ export const CardDeProduto = ({ p, idx, dlt, fvt }) => {
     <Card
       hoverable
       key={idx}
-      style={{ width: 274 }}
+      style={{ width: 274 }}p
       cover={<CardImagemContainer p={p} dlt={dlt} fvt={fvt} />}
     >
       <Meta 
