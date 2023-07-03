@@ -1,12 +1,10 @@
 import axios from 'axios'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Row, Col, message, Button, Table, Image, Collapse } from 'antd'
+import { Row, Col, message } from 'antd'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
-import { Typography } from 'antd';
-import { DeleteFilled } from '@ant-design/icons'
-import { converteValorInteiroParaValorMonetario } from './functions'
-import { CardDeProduto } from './components/CardParaProduto/CardDeProduto';
-import { TbShoppingCartPlus } from 'react-icons/tb'
+import { Typography } from 'antd'
+import { CardDeProduto } from './components/CardParaProduto/CardDeProduto'
+import { SkeletonCardParaProduto } from './components/SkeletonCardParaProduto/SkeletonCardParaProduto'
 
 const { Title } = Typography
 
@@ -45,71 +43,18 @@ export const MeusFavoritos = () => {
     }
   }, [favoritos, messageApi])
 
-  const columns = [
-    {
-      dataIndex: 'foto',
-      key: 'foto',
-      width: 100,
-      render: (text) => <Image height={40} src={text} /> 
-    },
-    {
-      title: 'Nome',
-      dataIndex: 'produto',
-      key: 'produto'
-    },
-    {
-      title: 'Descrição',
-      dataIndex: 'descricao',
-      key: 'descricao'
-    },
-    {
-      title: 'Valor',
-      dataIndex: 'valor',
-      key: 'valor',
-      render: (text) => {
-        return (
-          <div>
-            R$ {converteValorInteiroParaValorMonetario(text)}
-          </div>
-        )
-      }
-    },
-    {
-      title: 'Ações',
-      key: 'acoes',
-      align: 'center',
-      render: (record) => {
-        return (
-          <Row gutter={8} justify='center'>
-            <Col>
-              <Button
-                type="text"
-                title="Adicionar ao carrinho"
-                icon={<TbShoppingCartPlus style={{color: '#1677ff', fontSize: 18}} />} 
-                onClick={() => setProdutosSelecionadosParaCompra(record)}
-              />
-            </Col>
-            <Col>
-              <Button 
-                type="text"
-                title="Remover"
-                icon={<DeleteFilled style={{color: '#ff4d4f'}} />}  
-                onClick={() => deleteProdutoDosFavoritos(record.id)}
-              />
-            </Col>
-          </Row>
-        )
-      }
-    }
-  ]
-
   const renderCardPorProduto = useMemo(() => {
+    if (loading) {
+      return Array.from(Array(6)).map((_, index) =>
+        <SkeletonCardParaProduto key={index} />
+      )
+    }
     return favoritos.map((p, idx) => {
       return (
         <CardDeProduto key={idx} p={p} idx={idx} dlt={deleteProdutoDosFavoritos} />
       )
     })
-  }, [favoritos, deleteProdutoDosFavoritos])
+  }, [loading, favoritos, deleteProdutoDosFavoritos])
 
   useEffect(() => {
     getFavoritosPorUsuario()
@@ -124,27 +69,9 @@ export const MeusFavoritos = () => {
           <Title level={3}>Meus favoritos</Title>
         </Col>
         <Col span={24}>
-          <Collapse
-            items={[
-              {
-                key: '1',
-                label: 'VISUALIZAR PRODUTOS FAVORITOS EM CARDS',
-                children: (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: '10px', margin: '0px 16px', paddingBottom: 10 }}>
-                    {renderCardPorProduto}
-                  </div>
-                )
-              }
-            ]} 
-          />
-        </Col>
-        <Col span={24}>
-          <Table
-            rowKey={'id'}
-            loading={loading}
-            columns={columns}
-            dataSource={favoritos}
-          />
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', rowGap: '10px', columnGap: '10px', margin: '0px 16px', paddingBottom: 10 }}>
+            {renderCardPorProduto}
+          </div>
         </Col>
       </Row>
     </div>
