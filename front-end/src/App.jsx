@@ -31,7 +31,7 @@ function App() {
             systemAtDarkMode={systemAtDarkMode}
             setSystemAtDarkMode={setSystemAtDarkMode} 
           />
-          <Layout.Content>
+          <Layout.Content style={{ height: '100%' }}>
             <Card style={{ height: '100%', borderRadius: 0 }}>
               <Routes>
                   <Route path="/" element={<Home />} />

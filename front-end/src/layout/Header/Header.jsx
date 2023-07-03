@@ -76,7 +76,7 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
   return (
     <Layout.Header style={{ ...themeModeStyle, position: 'fixed', width: '100%', zIndex: 1, paddingInline: 20 }}>
       <Row justify='space-between' gutter={[24,24]}>
-        <Col onClick={() => navigate('home')}>
+        <Col onClick={() => navigate('home')} style={{ cursor: 'pointer' }}>
           Home
         </Col>
         <Col style={{ display: 'flex', padding: 0 }} span={18}>

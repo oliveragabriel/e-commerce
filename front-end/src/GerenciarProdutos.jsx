@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
-import { Row, Col, message, Button, Table } from 'antd'
+import { Row, Col, message, Button, Table, Image } from 'antd'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 import { Typography } from 'antd';
 import { DeleteFilled, EditFilled } from '@ant-design/icons'
@@ -44,6 +44,12 @@ export const GerenciarProdutos = () => {
       key: 'id'
     },
     {
+      dataIndex: 'foto',
+      key: 'foto',
+      width: 100,
+      render: (text) => <Image height={40} src={text} /> 
+    },
+    {
       title: 'Nome',
       dataIndex: 'produto',
       key: 'produto'
@@ -54,11 +60,6 @@ export const GerenciarProdutos = () => {
       key: 'descricao',
       width: '50%',
       render: (text) => recortaTextoParaExibirCompactado(text, 225)
-    },
-    {
-      title: 'Categoria',
-      dataIndex: 'tipo',
-      key: 'tipo'
     },
     {
       title: 'Valor',
@@ -121,7 +122,7 @@ export const GerenciarProdutos = () => {
   
 
   return (
-    <div style={{ marginTop: '52px', padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
+    <div style={{ minHeight: '86.1vh',  marginTop: '52px', padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
       {contextHolder}
       <Row gutter={[24,24]}>
         <Col span={24}>

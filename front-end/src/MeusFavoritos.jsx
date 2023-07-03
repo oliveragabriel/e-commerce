@@ -1,17 +1,18 @@
 import axios from 'axios'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Row, Col, message, Button, Table } from 'antd'
+import { Row, Col, message, Button, Table, Image, Collapse } from 'antd'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 import { Typography } from 'antd';
 import { DeleteFilled } from '@ant-design/icons'
 import { converteValorInteiroParaValorMonetario } from './functions'
 import { CardDeProduto } from './components/CardParaProduto/CardDeProduto';
+import { TbShoppingCartPlus } from 'react-icons/tb'
 
 const { Title } = Typography
 
 export const MeusFavoritos = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const { usuarioLogado } = useControleUsuarioContext()
+  const { usuarioLogado, setProdutosSelecionadosParaCompra } = useControleUsuarioContext()
 
   const [loading, setLoading] = useState(false)
   const [favoritos, setFavoritos] = useState([])
@@ -46,6 +47,12 @@ export const MeusFavoritos = () => {
 
   const columns = [
     {
+      dataIndex: 'foto',
+      key: 'foto',
+      width: 100,
+      render: (text) => <Image height={40} src={text} /> 
+    },
+    {
       title: 'Nome',
       dataIndex: 'produto',
       key: 'produto'
@@ -54,11 +61,6 @@ export const MeusFavoritos = () => {
       title: 'Descrição',
       dataIndex: 'descricao',
       key: 'descricao'
-    },
-    {
-      title: 'Categoria',
-      dataIndex: 'tipo',
-      key: 'tipo'
     },
     {
       title: 'Valor',
@@ -79,6 +81,14 @@ export const MeusFavoritos = () => {
       render: (record) => {
         return (
           <Row gutter={8} justify='center'>
+            <Col>
+              <Button
+                type="text"
+                title="Adicionar ao carrinho"
+                icon={<TbShoppingCartPlus style={{color: '#1677ff', fontSize: 18}} />} 
+                onClick={() => setProdutosSelecionadosParaCompra(record)}
+              />
+            </Col>
             <Col>
               <Button 
                 type="text"
@@ -107,14 +117,26 @@ export const MeusFavoritos = () => {
   
 
   return (
-    <div style={{ marginTop: '52px', padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
+    <div style={{ minHeight: '86.1vh', marginTop: '52px', padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
       {contextHolder}
       <Row gutter={[24,24]}>
         <Col span={24}>
           <Title level={3}>Meus favoritos</Title>
         </Col>
-        <Col style={{ display: 'flex', columnGap: '10px', overflow: 'auto', margin: '0px 16px' }}>
-          {renderCardPorProduto}
+        <Col span={24}>
+          <Collapse
+            items={[
+              {
+                key: '1',
+                label: 'VISUALIZAR PRODUTOS FAVORITOS EM CARDS',
+                children: (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: '10px', margin: '0px 16px', paddingBottom: 10 }}>
+                    {renderCardPorProduto}
+                  </div>
+                )
+              }
+            ]} 
+          />
         </Col>
         <Col span={24}>
           <Table

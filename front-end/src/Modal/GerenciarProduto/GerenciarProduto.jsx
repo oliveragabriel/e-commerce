@@ -62,7 +62,6 @@ export const ModalGerenciarProduto = ({ product, visible, closeFn }) => {
 
   const setInitialValues = useCallback(() => {
     if (product) {
-      console.log("🚀 ~ setInitialValues ~ product:", product)
       const categoria = listaComTodasCategorias.find((c) => c.label === product.tipo)?.value
       setImagemFotoUrl(product.foto)
       setImagemBannerUrl(product.banner)

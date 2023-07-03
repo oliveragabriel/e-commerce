@@ -2,6 +2,8 @@ import { Carousel, message } from "antd"
 import axios from "axios"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { CardDeProduto } from "./components/CardParaProduto/CardDeProduto"
+import { SkeletonBanner } from "./components/SkeletonBanner/SkeletonBanner"
+import { SkeletonCardParaProduto } from "./components/SkeletonCardParaProduto/SkeletonCardParaProduto"
 import { useControleUsuarioContext } from "./hooks/useControleUsuarioContext"
 
 export const Home = () => {
@@ -39,7 +41,33 @@ export const Home = () => {
     setScreenHeight(window.innerHeight)
   }, [])
 
+  const bannerHeight = useMemo(() => screenHeight - 480, [screenHeight])
+
+  const renderBannerPorProduto = useMemo(() => {
+    if (loading) {
+      return (
+        <SkeletonBanner />
+      )
+    }
+    return (
+      <Carousel autoplay>
+        {listaComTodosProdutos?.map((p, idx) => {
+          return (
+            <div key={idx} className='banner-container'>
+              <img alt="product-banner" height={bannerHeight} src={p?.banner} style={{ width: '100%' }} />
+            </div>
+          )
+        })}
+      </Carousel>
+    )
+  }, [loading, listaComTodosProdutos, bannerHeight])
+
   const renderCardPorProduto = useMemo(() => {
+    if (loading) {
+      return Array.from(Array(12)).map((_, index) =>
+        <SkeletonCardParaProduto key={index} />
+      )
+    }
     return listaComTodosProdutos?.map((p, idx) => {
       return (
         <CardDeProduto 
@@ -54,19 +82,7 @@ export const Home = () => {
         />
       )
     })
-  }, [handleAdicionarProdutoComoFavorito, listaComTodosProdutos, messageApi, usuarioLogado?.id])
-
-  const bannerHeight = useMemo(() => screenHeight - 480, [screenHeight])
-
-  const renderBannerPorProduto = useMemo(() => {
-    return listaComTodosProdutos?.map((p, idx) => {
-      return (
-        <div key={idx} className='banner-container'>
-          <img alt="product-banner" height={bannerHeight} src={p?.banner} style={{ width: '100%' }} />
-        </div>
-      )
-    })
-  }, [listaComTodosProdutos, bannerHeight])
+  }, [loading, listaComTodosProdutos, usuarioLogado?.id, handleAdicionarProdutoComoFavorito, messageApi])
 
   useEffect(() => {
     getListaProdutos() 
@@ -81,11 +97,9 @@ export const Home = () => {
       <div style={{ margin: '32px 0px 0px 0px', padding: 16 }}>
         {contextHolder}
         <div style={{ display: 'block', marginBottom: 10 }}>
-          <Carousel autoplay>
-            {renderBannerPorProduto}
-          </Carousel>
+          {renderBannerPorProduto}
         </div>
-        <div style={{ display: 'flex', columnGap: '10px', overflow: 'auto', paddingBottom: 10, rowGap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', columnGap: '10px', overflow: 'auto', paddingBottom: 10, rowGap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>          
           {renderCardPorProduto}
         </div>
       </div>
