@@ -8,6 +8,7 @@ export function ControleUsuarioContextProvider ({ children }) {
     const [produtosSelecionadosParaCompra, setProdutosSelecionadosParaCompra] = useState([])
     const [listaComTodosPaises, setListaComTodosPaises] = useState([])
     const [listaComTodosEstados, setListaComTodosEstados] = useState([])
+    const [listaComTodasCategorias, setListaComTodasCategorias] = useState([])
 
   return (
     <ControleUsuarioContext.Provider
@@ -15,10 +16,12 @@ export function ControleUsuarioContextProvider ({ children }) {
         usuarioLogado,
         listaComTodosEstados,
         listaComTodosPaises,
+        listaComTodasCategorias,
         produtosSelecionadosParaCompra,
         setUsuarioLogado,
         setListaComTodosEstados,
         setListaComTodosPaises,
+        setListaComTodasCategorias,
         setProdutosSelecionadosParaCompra
       }}
     >

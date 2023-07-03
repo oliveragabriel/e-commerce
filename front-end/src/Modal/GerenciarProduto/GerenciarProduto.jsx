@@ -8,13 +8,12 @@ import { converteImagemParaBase64 } from '../../functions'
 
 export const ModalGerenciarProduto = ({ product, visible, closeFn }) => {
   const [form] = Form.useForm()
-  const { usuarioLogado } = useControleUsuarioContext()
+  const { usuarioLogado, listaComTodasCategorias, setListaComTodasCategorias } = useControleUsuarioContext()
 
   const [messageApi, contextHolder] = message.useMessage()
   const [loading, setLoading] = useState(false)
   const [imagemFotoUrl, setImagemFotoUrl] = useState('')
   const [imagemBannerUrl, setImagemBannerUrl] = useState('')
-  const [listaComTodasCategorias, setListaComTodasCategorias] = useState([])
 
   const handleUpload = useCallback(async (file, type) => {
     try {
@@ -63,11 +62,13 @@ export const ModalGerenciarProduto = ({ product, visible, closeFn }) => {
 
   const setInitialValues = useCallback(() => {
     if (product) {
+      console.log("🚀 ~ setInitialValues ~ product:", product)
+      const categoria = listaComTodasCategorias.find((c) => c.label === product.tipo)?.value
       setImagemFotoUrl(product.foto)
       setImagemBannerUrl(product.banner)
-      form.setFieldsValue({ ...product, nome: product.produto })
+      form.setFieldsValue({ ...product, nome: product.produto, categoria: categoria })
     }
-  },[product, form])
+  },[product, listaComTodasCategorias, form])
 
   const getListaCategoriasParaProduto = useCallback(async () => {
     try {
@@ -83,17 +84,17 @@ export const ModalGerenciarProduto = ({ product, visible, closeFn }) => {
     } finally {
       setLoading(false)
     }
-  }, [messageApi])
+  }, [messageApi, setListaComTodasCategorias])
   
   const title = useMemo(() => product ? 'Editar produto' : 'Adicionar produto', [product])
   
   useEffect(() => {
-    getListaCategoriasParaProduto()
+    if (listaComTodasCategorias.length < 1) getListaCategoriasParaProduto()
     setInitialValues()
     return () => {
       form.resetFields()
     }
-  }, [form, getListaCategoriasParaProduto, setInitialValues])
+  })
 
   return (
     <Modal

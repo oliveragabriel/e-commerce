@@ -85,7 +85,7 @@ export const Home = () => {
             {renderBannerPorProduto}
           </Carousel>
         </div>
-        <div style={{ display: 'flex', columnGap: '10px', overflow: 'auto', paddingBottom: 10 }}>
+        <div style={{ display: 'flex', columnGap: '10px', overflow: 'auto', paddingBottom: 10, rowGap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
           {renderCardPorProduto}
         </div>
       </div>
