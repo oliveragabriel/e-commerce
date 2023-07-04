@@ -1,1 +1,1 @@
-exports.validateUserToLoginQuery = 'SELECT nome, id, login, atribuicao FROM usuario WHERE senha = $2 AND login = $1';
+exports.validateUserToLoginQuery = 'SELECT nome, id, email, atribuicao FROM usuario WHERE senha = $2 AND email = $1';

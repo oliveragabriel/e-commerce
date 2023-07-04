@@ -89,19 +89,19 @@ export const ModalCadastrarConta = ({ visible, closeFn, openLg }) => {
           </Col>
           <Col span={24}>
             <Form.Item
-              name='login'
-              label='Login'
+              name='email'
+              label='Email'
               hasFeedback
               required
               rules={[
                 { 
                   required: true, 
-                  message: 'Obrigatório preencher Login' 
+                  message: 'Obrigatório preencher Email' 
                 }
               ]}
             >
               <Input 
-                placeholder='Digite seu Login'
+                placeholder='Digite seu Email'
                 addonAfter={<PiUserListLight />}
               />
             </Form.Item>

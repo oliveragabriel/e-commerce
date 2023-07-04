@@ -23,10 +23,10 @@ exports.getUserById = (req, res) => {
 };
 
 exports.postAddNewUser = (req, res) => {
-  const { nome, sobrenome, senha, login } = req.body
+  const { nome, sobrenome, senha, email } = req.body
   const atribuicao = 2
 
-  userService.postAddNewUser(nome, sobrenome, atribuicao, senha, login)
+  userService.postAddNewUser(nome, sobrenome, atribuicao, senha, email)
     .then(() => {
       res.status(200).send({ message: 'Usuário cadastrado com sucesso!' });
     })
@@ -36,10 +36,10 @@ exports.postAddNewUser = (req, res) => {
 };
 
 exports.putEditUserById = (req, res) => {
-  const { nome, sobrenome, cpf, nacionalidade, email, telefone, hasContato, login } = req.body
+  const { nome, sobrenome, cpf, nacionalidade, email, telefone } = req.body
   const { idUsuario } = req.params
 
-  userService.putEditUserById(nome, sobrenome, cpf, nacionalidade, email, telefone, idUsuario, hasContato, login)
+  userService.putEditUserById(nome, sobrenome, cpf, nacionalidade, email, telefone, idUsuario)
     .then(() => {
       res.status(200).send({ message: 'Usuário alterado com sucesso!' });
     })
@@ -67,56 +67,6 @@ exports.deleteUserById = (req, res) => {
   userService.deleteUserById(idUsuario)
     .then(() => {
       res.status(200).send({ message: 'Usuário deletado com sucesso!' });
-    })
-    .catch((error) => {
-      res.status(500).send({ error });
-    });
-};
-
-exports.getUserContact = (req, res) => {
-  const idUsuario = req.params.idUsuario;
-
-  userService.getUserContact(idUsuario)
-    .then((result) => {
-      res.status(200).send({ result });
-    })
-    .catch((error) => {
-      res.status(500).send({ error });
-    });
-};
-
-exports.postAddNewContact = (req, res) => {
-  const { ddd, numero, email } = req.body
-  const { idUsuario } = req.params
-
-  userService.postAddNewContact(ddd, numero, email, idUsuario)
-    .then(() => {
-      res.status(200).send({ message: 'Contato cadastrado com sucesso!' });
-    })
-    .catch((error) => {
-      res.status(500).send({ error });
-    });
-};
-
-exports.putEditContactById = (req, res) => {
-  const { ddd, numero, email } = req.body
-  const { idUsuario } = req.params
-
-  userService.putEditUserById(ddd, numero, email, idUsuario)
-    .then(() => {
-      res.status(200).send({ message: 'Contato alterado com sucesso!' });
-    })
-    .catch((error) => {
-      res.status(500).send({ error });
-    });
-};
-
-exports.deleteContactById = (req, res) => {
-  const idContato = req.params.idContato;
-
-  userService.deleteContactById(idContato)
-    .then(() => {
-      res.status(200).send({ message: 'Contato deletado com sucesso!' });
     })
     .catch((error) => {
       res.status(500).send({ error });

@@ -1,10 +1,9 @@
 import axios from 'axios'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Row, Col, Form, Input, message, Button, Select } from 'antd'
 import { CheckOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import { HiOutlineIdentification } from 'react-icons/hi'
 import { BsTelephone } from 'react-icons/bs'
-import { PiUserListLight } from 'react-icons/pi'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 import { ModalGerenciarSenha } from './Modal/GerenciarSenha/GerenciarSenha'
 import { Typography } from 'antd';
@@ -21,23 +20,18 @@ export const MeuPerfil = () => {
   const [loading, setLoading] = useState(false)
   const [countries, setCountries] = useState([])
 
-  const hasContato = useMemo(() => {
-    const hasEmail = form.getFieldValue('email')
-    return hasEmail ? true : false
-  }, [form])
-
   const handleSubmit = useCallback(async () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      const response = await axios.put(`http://localhost:3003/usuario/${usuarioLogado.id}`, {...values, hasContato})
+      const response = await axios.put(`http://localhost:3003/usuario/${usuarioLogado.id}`, values)
       messageApi.success(response.data.message)
     } catch (error) {
-      messageApi.error(error)
+      messageApi.error('erro')
     } finally {
       setLoading(false)
     }
-  }, [form, hasContato, messageApi, usuarioLogado.id])
+  }, [form, messageApi, usuarioLogado.id])
 
   const getCountriesList = useCallback(async () => {
     try {
@@ -88,25 +82,6 @@ export const MeuPerfil = () => {
         <Row gutter={[8,8]}>
           <Col span={24}>
             <Title level={3}>Meu perfil</Title>
-          </Col>
-          <Col span={24}>
-            <Form.Item
-              name='login'
-              label='Login'
-              hasFeedback
-              required
-              rules={[
-                { 
-                  required: true, 
-                  message: 'Obrigatório preencher Login' 
-                }
-              ]}
-            >
-              <Input
-                placeholder='Digite seu Login'
-                addonAfter={<PiUserListLight />}
-              />
-            </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
