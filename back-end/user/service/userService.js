@@ -19,7 +19,7 @@ exports.getUserById = (idUsuario) => {
 };
 
 exports.postAddNewUser = async (nome, sobrenome, atribuicao, senha, email) => {
-  const values = [nome, sobrenome, atribuicao, senha, email];
+  const values = [nome, sobrenome, atribuicao, senha, email]
   return await database.query(userQueries.postAddNewUserQuery, values)
     .then((result) => {
       return result.rows
@@ -34,11 +34,9 @@ exports.putEditUserById = async (nome, sobrenome, cpf, nacionalidade, email, tel
   const sqlColumnNacionalidade = nacionalidade ? `, nacionalidade = ${nacionalidade}` : ''
   const sqlColumnTelefone = telefone ? `, telefone = '${telefone}'` : ''
   const sqlFinal = `UPDATE usuario SET nome = '${nome}', sobrenome = '${sobrenome}', email = '${email}' ${sqlColumnCpf} ${sqlColumnNacionalidade} ${sqlColumnTelefone} WHERE id = ${idUsuario};`
-  console.log("🚀 ~ exports.putEditUserById= ~ sqlFinal:", sqlFinal)
   return await database.query(sqlFinal)
     .then((result) => result.rows)
     .catch((error) => {
-      console.log("🚀 ~ exports.putEditUserById= ~ error:", error)
       throw error;
     });
 };

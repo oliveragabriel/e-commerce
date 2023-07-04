@@ -19,8 +19,8 @@ export const ModalCadastrarConta = ({ visible, closeFn, openLg }) => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      const { senha, nome, sobrenome, login } = values
-      const response = await axios.post('http://localhost:3003/usuario/', { senha, nome, sobrenome, login })
+      const { senha, nome, sobrenome, email } = values
+      const response = await axios.post('http://localhost:3003/usuario/', { senha, nome, sobrenome, email })
       messageApi.success(response.data.message)
       closeFn()
       openLg()
