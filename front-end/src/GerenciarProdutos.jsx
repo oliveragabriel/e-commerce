@@ -6,12 +6,14 @@ import { Typography } from 'antd';
 import { DeleteFilled, EditFilled } from '@ant-design/icons'
 import { converteValorInteiroParaValorMonetario, recortaTextoParaExibirCompactado } from './functions'
 import { ModalGerenciarProduto } from './Modal/GerenciarProduto/GerenciarProduto'
+import { useNavigate } from 'react-router-dom'
 
 const { Title } = Typography;
 
 export const GerenciarProdutos = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const { usuarioLogado } = useControleUsuarioContext()
+  const navigate = useNavigate()
 
   const [exibirTelaParaGerenciarProduto, setExibirTelaParaGerenciarProduto] = useState(false)
 
@@ -85,7 +87,7 @@ export const GerenciarProdutos = () => {
                 type="text"
                 title="Editar"
                 icon={<EditFilled style={{color: '#1677ff'}} />} 
-                onClick={() => handleModalProduto(record)}
+                onClick={() => navigate(`${record.id}`)}
               />
             </Col>
             <Col>

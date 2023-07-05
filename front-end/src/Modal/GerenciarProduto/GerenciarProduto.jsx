@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Row, Col, Modal, Form, Input, message, Upload, Select, InputNumber } from 'antd'
+import { Row, Col, Modal, Form, Input, message, Upload, Select, InputNumber, Radio, Space } from 'antd'
 import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { converteImagemParaBase64 } from '../../functions'
 
-export const ModalGerenciarProduto = ({ product, visible, closeFn }) => {
+export const ModalGerenciarProduto = ({ visible, closeFn }) => {
   const [form] = Form.useForm()
   const { usuarioLogado, listaComTodasCategorias, setListaComTodasCategorias } = useControleUsuarioContext()
 
@@ -28,17 +28,10 @@ export const ModalGerenciarProduto = ({ product, visible, closeFn }) => {
     }
   }, [])
 
-  const uploadButton = (
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>
-        Upload
-      </div>
-    </div>
-  );
-
   const handleCancel = useCallback(() => {
     closeFn()
+    setImagemBannerUrl('')
+    setImagemFotoUrl('')
     form.resetFields()
   }, [closeFn, form])
 
@@ -46,28 +39,16 @@ export const ModalGerenciarProduto = ({ product, visible, closeFn }) => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      if (product) {
-        await axios.put(`http://localhost:3003/produto/${product.id}`, { ...values, foto: imagemFotoUrl, banner: imagemBannerUrl })
-      } else {
-        await axios.post(`http://localhost:3003/produto`, { ...values, idUsuario: usuarioLogado.id, foto: imagemFotoUrl, banner: imagemBannerUrl })
-      }
+      console.log("🚀 ~ handleSubmit ~ values:", values)
+      await axios.post(`http://localhost:3003/produto`, { ...values, idUsuario: usuarioLogado.id, foto: imagemFotoUrl, banner: imagemBannerUrl })
       messageApi.success('Produto salvo com sucesso.')
-      closeFn()
+      handleCancel()
     } catch (error) {
       messageApi.error('Erro ao salvar o produto.')
     } finally {
       setLoading(false)
     }
-  }, [form, product, messageApi, closeFn, usuarioLogado.id, imagemFotoUrl, imagemBannerUrl])
-
-  const setInitialValues = useCallback(() => {
-    if (product) {
-      const categoria = listaComTodasCategorias.find((c) => c.label === product.tipo)?.value
-      setImagemFotoUrl(product.foto)
-      setImagemBannerUrl(product.banner)
-      form.setFieldsValue({ ...product, nome: product.produto, categoria: categoria })
-    }
-  },[product, listaComTodasCategorias, form])
+  }, [form, messageApi, handleCancel, usuarioLogado.id, imagemFotoUrl, imagemBannerUrl])
 
   const getListaCategoriasParaProduto = useCallback(async () => {
     try {
@@ -84,20 +65,23 @@ export const ModalGerenciarProduto = ({ product, visible, closeFn }) => {
       setLoading(false)
     }
   }, [messageApi, setListaComTodasCategorias])
-  
-  const title = useMemo(() => product ? 'Editar produto' : 'Adicionar produto', [product])
-  
+
+  const uploadButton = useMemo(() => (
+    <div>
+      {loading ? <LoadingOutlined /> : <PlusOutlined />}
+      <div style={{ marginTop: 8 }}>
+        Upload
+      </div>
+    </div>
+  ), [loading])
+   
   useEffect(() => {
     if (listaComTodasCategorias.length < 1) getListaCategoriasParaProduto()
-    setInitialValues()
-    return () => {
-      form.resetFields()
-    }
-  })
+  }, [form, getListaCategoriasParaProduto, listaComTodasCategorias.length])
 
   return (
     <Modal
-      title={title}
+      title="Adicionar produto"
       open={visible}
       confirmLoading={loading}
       okText='Confirmar'
@@ -107,7 +91,7 @@ export const ModalGerenciarProduto = ({ product, visible, closeFn }) => {
       {contextHolder}
       <Form form={form} layout='vertical' size='middle'>
         <Row gutter={[8,8]}>
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               name='foto'
               label='Foto'
@@ -132,7 +116,7 @@ export const ModalGerenciarProduto = ({ product, visible, closeFn }) => {
               </Upload>
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item
               name='banner'
               label='Banner'
@@ -147,6 +131,27 @@ export const ModalGerenciarProduto = ({ product, visible, closeFn }) => {
               >
                 {imagemBannerUrl ? <img src={imagemBannerUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
               </Upload>
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              name='deveMostrarBanner'
+              label='Mostrar Banner?'
+              hasFeedback
+              required
+              rules={[
+                { 
+                  required: true, 
+                  message: 'Obrigatório preencher se deve Mostrar Banner' 
+                }
+              ]}
+            >
+              <Radio.Group style={{ marginTop: '22px' }}>
+                <Space direction="vertical">
+                  <Radio value={true}> Mostrar </Radio>
+                  <Radio value={false}> Não mostrar </Radio>
+                </Space>
+              </Radio.Group>
             </Form.Item>
           </Col>
           <Col span={24}>

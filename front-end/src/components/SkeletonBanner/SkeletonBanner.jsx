@@ -5,11 +5,11 @@ import { styled } from "styled-components"
 const StyledSkeleton = styled(Skeleton.Image)`
   &.ant-skeleton {
     width: 100%;
-    height: 48vh;
+    height: 50vh;
   }
   &.ant-skeleton-image {
     width: 100% !important;
-    height: 48vh !important;
+    height: 50vh !important;
   }
 `
 

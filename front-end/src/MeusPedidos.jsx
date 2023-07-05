@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
-import { Row, Col, message, Table, Typography } from 'antd'
+import { Row, Col, message, Table, Typography, Image } from 'antd'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 import { converteValorInteiroParaValorMonetario } from './functions'
 const { Title } = Typography
@@ -19,9 +19,16 @@ export const MeusPedidos = () => {
       key: 'id'
     },
     {
+      dataIndex: 'foto',
+      key: 'foto',
+      width: 100,
+      render: (text) => <Image height={40} src={text} /> 
+    },
+    {
       title: 'Produto',
       dataIndex: 'nome',
-      key: 'nome'
+      key: 'nome',
+      width: 200
     },
     {
       title: 'Descrição',
@@ -29,14 +36,10 @@ export const MeusPedidos = () => {
       key: 'descricao'
     },
     {
-      title: 'Categoria',
-      dataIndex: 'tipo',
-      key: 'tipo'
-    },
-    {
       title: 'Valor',
       dataIndex: 'valor',
       key: 'valor',
+      width: 150,
       render: (text) => {
         return (
           <div>

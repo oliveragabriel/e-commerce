@@ -27,13 +27,10 @@ export const Home = () => {
 
   const handleAdicionarProdutoComoFavorito = useCallback(async (idProduto) => {
     try {
-      setLoading(true)
       const response = await axios.post(`http://localhost:3003/favoritos/${idProduto}/usuario/${usuarioLogado.id}`)
       messageApi.success(response?.data?.message)
     } catch (error) {
       messageApi.error('Erro ao salvar o produto como favorito.')
-    } finally {
-      setLoading(false)
     }
   }, [messageApi, usuarioLogado.id])
 

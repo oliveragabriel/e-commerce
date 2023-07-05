@@ -1,7 +1,6 @@
 const purchaseService = require('../service/purchaseService');
 
 exports.listPurchaseByUserId = (req, res) => {
-  console.log("🚀 ~ req:", req)
   const idUsuario = req.params.idUsuario;
 
   purchaseService.listPurchaseByUserId(idUsuario)
