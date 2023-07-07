@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 export const ControleUsuarioContext = createContext({})
@@ -9,6 +9,15 @@ export function ControleUsuarioContextProvider ({ children }) {
     const [listaComTodosPaises, setListaComTodosPaises] = useState([])
     const [listaComTodosEstados, setListaComTodosEstados] = useState([])
     const [listaComTodasCategorias, setListaComTodasCategorias] = useState([])
+
+    useEffect(() => {
+      if (!usuarioLogado?.id) {
+        const usuarioArmazenadoNoLocalStorage = localStorage.getItem('usuarioLogado')
+        if (usuarioArmazenadoNoLocalStorage) {
+          setUsuarioLogado(JSON.parse(usuarioArmazenadoNoLocalStorage))
+        }
+      }
+    }, [setUsuarioLogado, usuarioLogado])
 
   return (
     <ControleUsuarioContext.Provider

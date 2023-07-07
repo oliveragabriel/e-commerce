@@ -12,7 +12,7 @@ export const CardDeProduto = ({ p, idx, dlt, fvt }) => {
 
   const handleAdicionaParaCarrinhoDeCompra = useCallback(() => {
     const produtosSelecionadosAntes = produtosSelecionadosParaCompra
-    const novaListaProdutosSelecionados = [ ...produtosSelecionadosAntes, { ...p, id: p.idProduto, nome: p.produto } ]
+    const novaListaProdutosSelecionados = [ ...produtosSelecionadosAntes, { ...p, id: p.idProduto ?? p.id, nome: p.produto } ]
     setProdutosSelecionadosParaCompra(novaListaProdutosSelecionados)
   }, [p, produtosSelecionadosParaCompra, setProdutosSelecionadosParaCompra])
   

@@ -10,6 +10,16 @@ exports.listProductTypes = (_, res) => {
     });
 };
 
+exports.getProductsToShowAsBanner = (_, res) => {
+  productService.getProductsToShowAsBanner()
+    .then((result) => {
+      res.status(200).send(result);
+    })
+    .catch((error) => {
+      res.status(500).send({ error });
+    });
+};
+
 exports.getAllProducts = (_, res) => {
   productService.getAllProducts()
     .then((result) => {
@@ -37,7 +47,7 @@ exports.getProductById = (req, res) => {
 
   productService.getProductById(idProduto)
     .then((result) => {
-      res.status(200).send({ result });
+      res.status(200).send(result);
     })
     .catch((error) => {
       res.status(500).send({ error });
@@ -57,10 +67,10 @@ exports.postAddNewProduct = async (req, res) => {
 };
 
 exports.putEditProductById = (req, res) => {
-  const { nome, descricao, tipo, valor } = req.body
+  const { nome, descricao, categoria, valor, banner, devemostrarbanner, foto } = req.body
   const { idProduto } = req.params
 
-  productService.putEditProductById(nome, descricao, tipo, valor, idProduto)
+  productService.putEditProductById(nome, descricao, categoria, valor, banner, devemostrarbanner, foto, idProduto)
     .then(() => {
       res.status(200).send({ message: 'Produto alterado com sucesso!' });
     })

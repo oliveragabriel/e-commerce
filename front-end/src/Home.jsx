@@ -12,18 +12,35 @@ export const Home = () => {
   const [loading, setLoading] = useState(false)
   const [screenHeight, setScreenHeight] = useState(0)
   const [listaComTodosProdutos, setListaComTodosProdutos] = useState([])
+  const [listaComBanner, setListaComBanner] = useState([])
 
   const getListaProdutos = useCallback(async () => {
     try {
-      setLoading(true)
       const response = await axios.get(`http://localhost:3003/produto`)
       setListaComTodosProdutos(response.data)
     } catch (error) {
-      messageApi.error('Não foi possível buscar a lista de categorias.')
+      messageApi.error('Não foi possível buscar a lista de produtos.')
+    }
+  }, [messageApi])
+
+  const getListaBanner = useCallback(async () => {
+    try {
+      const response = await axios.get(`http://localhost:3003/produto/banner`)
+      setListaComBanner(response.data)
+    } catch (error) {
+      messageApi.error('Não foi possível buscar a lista de banners.')
+    }
+  }, [messageApi])
+
+  const buscarDadosParaExibirProdutos = useCallback(async () => {
+    try {
+      setLoading(true)
+      await getListaBanner()
+      await getListaProdutos()
     } finally {
       setLoading(false)
     }
-  }, [messageApi])
+  }, [getListaBanner, getListaProdutos])
 
   const handleAdicionarProdutoComoFavorito = useCallback(async (idProduto) => {
     try {
@@ -48,7 +65,7 @@ export const Home = () => {
     }
     return (
       <Carousel autoplay>
-        {listaComTodosProdutos?.map((p, idx) => {
+        {listaComBanner?.map((p, idx) => {
           return (
             <div key={idx} className='banner-container'>
               <img alt="product-banner" height={bannerHeight} src={p?.banner} style={{ width: '100%' }} />
@@ -57,7 +74,7 @@ export const Home = () => {
         })}
       </Carousel>
     )
-  }, [loading, listaComTodosProdutos, bannerHeight])
+  }, [loading, listaComBanner, bannerHeight])
 
   const renderCardPorProduto = useMemo(() => {
     if (loading) {
@@ -65,6 +82,7 @@ export const Home = () => {
         <SkeletonCardParaProduto key={index} />
       )
     }
+
     return listaComTodosProdutos?.map((p, idx) => {
       return (
         <CardDeProduto 
@@ -82,13 +100,13 @@ export const Home = () => {
   }, [loading, listaComTodosProdutos, usuarioLogado?.id, handleAdicionarProdutoComoFavorito, messageApi])
 
   useEffect(() => {
-    getListaProdutos() 
+    buscarDadosParaExibirProdutos()
     handleResizeBanner()
     window.addEventListener('resize', handleResizeBanner)
     return () => {
       window.removeEventListener('resize', handleResizeBanner)
     }
-  }, [getListaProdutos, handleResizeBanner])
+  }, [getListaBanner, getListaProdutos, buscarDadosParaExibirProdutos, handleResizeBanner])
   
   return (
       <div style={{ margin: '32px 0px 0px 0px', padding: 16 }}>

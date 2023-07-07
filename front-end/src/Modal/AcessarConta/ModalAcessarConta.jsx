@@ -28,7 +28,9 @@ export const ModalAcessarConta = ({ visible, closeFn, openLg }) => {
       const values = await form.validateFields()
       const response = await axios.post('http://localhost:3003/login/', { ...values })
       if (response.data.length < 1) return messageApi.error('Não foi encontrado um usuário com os dados fornecidos.')
-      setUsuarioLogado(response.data[0])
+      const usuarioLogado = response.data[0]
+      setUsuarioLogado(usuarioLogado)
+      localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado))
       handleCancel()
     } catch (error) {
       console.log(error)

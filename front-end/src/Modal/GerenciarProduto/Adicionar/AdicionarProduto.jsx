@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Row, Col, Modal, Form, Input, message, Upload, Select, InputNumber, Radio, Space } from 'antd'
-import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext'
+import { useControleUsuarioContext } from '../../../hooks/useControleUsuarioContext'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { converteImagemParaBase64 } from '../../functions'
+import { converteImagemParaBase64 } from '../../../functions'
 
-export const ModalGerenciarProduto = ({ visible, closeFn }) => {
+export const ModalAdicionarProduto = ({ visible, closeFn }) => {
   const [form] = Form.useForm()
   const { usuarioLogado, listaComTodasCategorias, setListaComTodasCategorias } = useControleUsuarioContext()
 
@@ -39,7 +39,6 @@ export const ModalGerenciarProduto = ({ visible, closeFn }) => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      console.log("🚀 ~ handleSubmit ~ values:", values)
       await axios.post(`http://localhost:3003/produto`, { ...values, idUsuario: usuarioLogado.id, foto: imagemFotoUrl, banner: imagemBannerUrl })
       messageApi.success('Produto salvo com sucesso.')
       handleCancel()
@@ -113,7 +112,7 @@ export const ModalGerenciarProduto = ({ visible, closeFn }) => {
                 }}
               >
                 {imagemFotoUrl ? <img src={imagemFotoUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-              </Upload>
+              </Upload>ModalAdicionarProduto
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -244,7 +243,7 @@ export const ModalGerenciarProduto = ({ visible, closeFn }) => {
   )
 }
 
-ModalGerenciarProduto.propTypes = {
+ModalAdicionarProduto.propTypes = {
   product: PropTypes.any,
   visible: PropTypes.bool.isRequired,
   closeFn: PropTypes.func.isRequired

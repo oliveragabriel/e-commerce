@@ -1,30 +1,25 @@
 import axios from 'axios'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Row, Col, message, Button, Table, Image } from 'antd'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 import { Typography } from 'antd';
 import { DeleteFilled, EditFilled } from '@ant-design/icons'
 import { converteValorInteiroParaValorMonetario, recortaTextoParaExibirCompactado } from './functions'
-import { ModalGerenciarProduto } from './Modal/GerenciarProduto/GerenciarProduto'
-import { useNavigate } from 'react-router-dom'
+import { ModalAdicionarProduto } from './Modal/GerenciarProduto/Adicionar/AdicionarProduto'
+import { ModalEditarProduto } from './Modal/GerenciarProduto/Editar/EditarProduto';
 
 const { Title } = Typography;
 
 export const GerenciarProdutos = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const { usuarioLogado } = useControleUsuarioContext()
-  const navigate = useNavigate()
 
-  const [exibirTelaParaGerenciarProduto, setExibirTelaParaGerenciarProduto] = useState(false)
+  const [exibirTelaParaAdicionarProduto, setExibirTelaParaAdicionarProduto] = useState(false)
+  const [exibirTelaParaEditarProduto, setExibirTelaParaEditarProduto] = useState(false)
 
   const [loading, setLoading] = useState(false)
   const [produtos, setProdutos] = useState([])
-  const [produtoSendoEditado, setProdutoSendoEditado] = useState(undefined)
-
-  const handleModalProduto = useCallback(async (endereco) => {
-    setProdutoSendoEditado(endereco)
-    setExibirTelaParaGerenciarProduto(true)
-  }, [])
+  const [produtoSendoEditado, setProdutoSendoEditado] = useState()
 
   const deleteProduto = useCallback(async (idProduto) => {
     try {
@@ -87,7 +82,10 @@ export const GerenciarProdutos = () => {
                 type="text"
                 title="Editar"
                 icon={<EditFilled style={{color: '#1677ff'}} />} 
-                onClick={() => navigate(`${record.id}`)}
+                onClick={() => {
+                  setProdutoSendoEditado(record)
+                  setExibirTelaParaEditarProduto(true)
+                }}
               />
             </Col>
             <Col>
@@ -118,10 +116,25 @@ export const GerenciarProdutos = () => {
     }
   }, [messageApi, usuarioLogado.id])
 
+  const renderModalEditar = useMemo(() => {
+    if (produtoSendoEditado) {
+      return (
+        <ModalEditarProduto
+          idProduto={produtoSendoEditado?.id}
+          visible={exibirTelaParaEditarProduto} 
+          closeFn={() => {
+            setProdutoSendoEditado()
+            setExibirTelaParaEditarProduto(false)
+          }}
+        />
+      )
+    }
+    return null
+  }, [exibirTelaParaEditarProduto, produtoSendoEditado])
+
   useEffect(() => {
     getListaProdutosCadastradosPorUsuario()
-  }, [getListaProdutosCadastradosPorUsuario, exibirTelaParaGerenciarProduto])
-  
+  }, [getListaProdutosCadastradosPorUsuario, exibirTelaParaAdicionarProduto, exibirTelaParaEditarProduto])
 
   return (
     <div style={{ minHeight: '86.1vh',  marginTop: '52px', padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
@@ -135,15 +148,15 @@ export const GerenciarProdutos = () => {
             style={{  marginRight: 6 }}
             type='primary'
             disabled={loading}
-            onClick={() => handleModalProduto()}
+            onClick={() => setExibirTelaParaAdicionarProduto(true)}
           >
             Adicionar Produto
           </Button>
-          <ModalGerenciarProduto
-            product={produtoSendoEditado}
-            visible={exibirTelaParaGerenciarProduto} 
-            closeFn={() => setExibirTelaParaGerenciarProduto(false)}
+          <ModalAdicionarProduto
+            visible={exibirTelaParaAdicionarProduto} 
+            closeFn={() => setExibirTelaParaAdicionarProduto(false)}
           />
+          {renderModalEditar}
         </Col>
         <Col span={24}>
           <Table

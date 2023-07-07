@@ -30,6 +30,7 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
 
   const deslogarUsuarioDoSistema = useCallback(() => {
     setUsuarioLogado({})
+    localStorage.removeItem('usuarioLogado');
     navigate('home')
   }, [navigate, setUsuarioLogado])
 

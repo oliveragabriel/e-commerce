@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
-import { Button } from 'antd'
+import { Button, Image, Row, Spin } from 'antd'
 import { useMemo } from 'react'
-import { DeleteFilled, HeartFilled } from '@ant-design/icons'
+import { DeleteFilled, HeartFilled, LoadingOutlined } from '@ant-design/icons'
 
 export const CardImagemContainer = ({ p, dlt, fvt }) => {
 
@@ -34,7 +34,18 @@ export const CardImagemContainer = ({ p, dlt, fvt }) => {
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       {renderBtn}
       <div className='image-container' style={{ marginTop: '10px' }}>
-        <img alt="product-image" height={120} src={p?.foto} style={{ width: '100%' }} />
+        <Image 
+          preview={false} 
+          placeholder={
+            <Row justify='center'>
+              <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+            </Row>
+          } 
+          alt="product-image" 
+          height={120} 
+          src={p?.foto} 
+          style={{ width: '100%' }} 
+        />
       </div>
     </div>
   )

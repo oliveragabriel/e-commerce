@@ -9,6 +9,14 @@ exports.listAllTypes = () => {
     });
 }
 
+exports.getProductsToShowAsBanner = () => {
+  return database.query(productQueries.getProductsToShowAsBanner)
+    .then((result) => result.rows)
+    .catch((error) => {
+      throw error;
+    })
+}
+
 exports.getAllProducts = () => {
   return database.query(productQueries.getAllProductsQuery)
     .then((result) => result.rows)
@@ -38,12 +46,12 @@ exports.getProductById = (idProduto) => {
 };
 
 exports.postAddNewProduct = async (body) => {
-  const { nome, descricao, categoria, valor, banner, foto, idUsuario } = body
+  const { nome, descricao, categoria, valor, banner, deveMostrarBanner, foto, idUsuario } = body
   const sqlColumnBanner = banner === '' ? '' : ', banner'
   const sqlColumnFoto = foto === '' ? '' : ', foto'
   const sqlValueBanner = banner === '' ? '' : `, '${banner}'`
   const sqlValueFoto = foto === '' ? '' : `, '${foto}'`
-  const sqlFinal = `INSERT INTO produto( nome, descricao, tipo, valor, vendedor ${sqlColumnFoto} ${sqlColumnBanner} ) VALUES ( '${nome}', '${descricao}', ${categoria}, ${valor}, ${idUsuario} ${sqlValueFoto} ${sqlValueBanner} );`
+  const sqlFinal = `INSERT INTO produto( nome, descricao, tipo, valor, vendedor, deveMostrarBanner ${sqlColumnFoto} ${sqlColumnBanner} ) VALUES ( '${nome}', '${descricao}', ${categoria}, ${valor}, ${idUsuario}, ${deveMostrarBanner} ${sqlValueFoto} ${sqlValueBanner} );`
   return await database.query(sqlFinal)
     .then((result) => result.rows)
     .catch((error) => {
@@ -51,11 +59,14 @@ exports.postAddNewProduct = async (body) => {
     })
 }
 
-exports.putEditProductById = async (nome, descricao, tipo, valor, idProduto) => {
-  const values = [nome, descricao, tipo, valor, idProduto];
-  return await database.query(productQueries.putEditUserByIdQuery, values)
-    .then((result) => result.rows)
-    .catch((error) => {
+exports.putEditProductById = async (nome, descricao, categoria, valor, banner, devemostrarbanner, foto, idProduto) => {
+  const values = [nome, descricao, categoria, valor, banner, devemostrarbanner, foto, idProduto]
+  const sqlColumnBanner = banner ? `, banner = '${banner}'` : ''
+  const sqlFinal = `UPDATE produto SET nome = '${nome}', descricao = '${descricao}', tipo = ${categoria}, valor = ${valor}, deveMostrarBanner = ${devemostrarbanner}, foto = '${foto}' ${sqlColumnBanner} WHERE id = ${idProduto};`
+  return await database.query(sqlFinal)
+  .then((result) => result.rows)
+  .catch((error) => {
+      console.log("🚀 ~ exports.putEditProductById= ~ error:", error)
       throw error;
     });
 };
