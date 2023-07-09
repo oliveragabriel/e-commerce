@@ -37,7 +37,8 @@ export const Header = ({ systemAtDarkMode, setSystemAtDarkMode }) => {
   const greetings = useMemo(() => {
     return usuarioLogado?.nome 
     ? (
-      <StyledMenu 
+      <StyledMenu
+        style={{ minWidth: 200, justifyContent: 'center' }} 
         mode="horizontal" 
         items={itemsMenu(navigate, usuarioLogado, deslogarUsuarioDoSistema)}
       />

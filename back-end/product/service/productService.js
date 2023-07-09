@@ -66,7 +66,6 @@ exports.putEditProductById = async (nome, descricao, categoria, valor, banner, d
   return await database.query(sqlFinal)
   .then((result) => result.rows)
   .catch((error) => {
-      console.log("🚀 ~ exports.putEditProductById= ~ error:", error)
       throw error;
     });
 };

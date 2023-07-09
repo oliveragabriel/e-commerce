@@ -12,19 +12,27 @@ export const MeusCartoes = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const { usuarioLogado } = useControleUsuarioContext()
 
-  const [exibirTelaParaAdicionarCartao, setExibirTelaParaAdicionarCartao] = useState(false)
-  const [acaoRealizadaNaPagina, setAcaoRealizadaNaPagina] = useState([])
+  const [exibirTelaParaGerenciarCartao, setExibirTelaParaGerenciarCartao] = useState(false)
+  const [acaoRealizadaNaPagina, setAcaoRealizadaNaPagina] = useState('')
   const [cartaoSendoEditado, setCartaoSendoEditado] = useState()
 
   const [loading, setLoading] = useState(false)
   const [cartoes, setCartoes] = useState([])
 
+  const deleteCartaoDoUsuario = useCallback(async (idCartao) => {
+    try {
+      setLoading(true)
+      await axios.delete(`http://localhost:3003/cartao/${idCartao}`)
+      const cartoesFiltrados = cartoes.filter((c) => c.id !== idCartao)
+      setCartoes(cartoesFiltrados)
+    } catch (error) {
+      messageApi.error('Não foi possível remover o cartão do usuário.')
+    } finally {
+      setLoading(false)
+    }
+  }, [cartoes, messageApi])
+
   const columns = [
-    {
-      title: 'Bandeira',
-      dataIndex: 'bandeira',
-      key: 'bandeira'
-    },
     {
       title: 'Número',
       dataIndex: 'numero',
@@ -36,8 +44,16 @@ export const MeusCartoes = () => {
       key: 'nome'
     },
     {
+      title: 'Data de Validade',
+      dataIndex: 'validade',
+      key: 'validade',
+      width: '15%'
+    },
+    {
       title: 'Ações',
       key: 'acoes',
+      width: '10%',
+      align: 'center',
       render: (record) => {
         return (
           <Row gutter={8} justify='center'>
@@ -49,6 +65,7 @@ export const MeusCartoes = () => {
                 onClick={() => {
                   setCartaoSendoEditado(record)
                   setAcaoRealizadaNaPagina('edit')
+                  setExibirTelaParaGerenciarCartao(true)
                 }}
               />
             </Col>
@@ -57,7 +74,7 @@ export const MeusCartoes = () => {
                 type="text"
                 title="Excluir"
                 icon={<DeleteFilled style={{color: '#ff4d4f'}} />}  
-                onClick={() => {}}
+                onClick={() => deleteCartaoDoUsuario(record.id)}
               />
             </Col>
           </Row>
@@ -69,13 +86,10 @@ export const MeusCartoes = () => {
   const getCartoesPorUsuario = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await axios.get(`http://localhost:3003/usuario/${usuarioLogado.id}/endereco`)
-      if (response?.data?.result?.length > 0) {
-        const usuario = response.data.result
-        setCartoes(usuario)
-      }
+      const response = await axios.get(`http://localhost:3003/cartao/${usuarioLogado.id}`)
+      setCartoes(response.data)
     } catch (error) {
-      messageApi.error('Não foi possível encontrar os endereços do usuário.')
+      messageApi.error('Não foi possível encontrar os cartões do usuário.')
     } finally {
       setLoading(false)
     }
@@ -83,7 +97,7 @@ export const MeusCartoes = () => {
 
   useEffect(() => {
     getCartoesPorUsuario()
-  }, [getCartoesPorUsuario])
+  }, [getCartoesPorUsuario, exibirTelaParaGerenciarCartao])
   
 
   return (
@@ -95,18 +109,18 @@ export const MeusCartoes = () => {
           </Col>
           <Col span={24}>
             <ModalGerenciarCartao
-              action={acaoRealizadaNaPagina}
               card={cartaoSendoEditado}
-              visible={exibirTelaParaAdicionarCartao} 
-              closeFn={() => setExibirTelaParaAdicionarCartao(false)}
-              openLg={() => setExibirTelaParaAdicionarCartao(true)}
+              action={acaoRealizadaNaPagina}
+              visible={exibirTelaParaGerenciarCartao} 
+              closeFn={() => setExibirTelaParaGerenciarCartao(false)}
+              openLg={() => setExibirTelaParaGerenciarCartao(true)}
             />
             <Button 
               style={{  marginRight: 6 }}
               type='primary'
               onClick={() => {
                 setAcaoRealizadaNaPagina('add')
-                setExibirTelaParaAdicionarCartao(true)
+                setExibirTelaParaGerenciarCartao(true)
               }}
             >
               Adicionar Cartão

@@ -1,19 +1,18 @@
-import { useCallback, useState } from 'react'
-import { Row, Col, Modal, Form, Input, message } from 'antd'
 import axios from 'axios'
 import PropTypes from 'prop-types'
+import { useCallback, useEffect, useState } from 'react'
+import { Row, Col, Modal, Form, Input, message } from 'antd'
 import { useControleUsuarioContext } from '../../hooks/useControleUsuarioContext'
 
-export const ModalGerenciarCartao = ({ action, card, visible, closeFn, openLg }) => {
+export const ModalGerenciarCartao = ({ action, card, visible, closeFn }) => {
   const [form] = Form.useForm()
   const { usuarioLogado } = useControleUsuarioContext()
-  console.log("🚀 ~ ModalGerenciarCartao ~ card:", card)
 
   const [messageApi, contextHolder] = message.useMessage()
   const [loading, setLoading] = useState(false)
 
   const handleCancel = useCallback(() => {
-    closeFn(false)
+    closeFn()
     form.resetFields()
   }, [closeFn, form])
 
@@ -21,17 +20,24 @@ export const ModalGerenciarCartao = ({ action, card, visible, closeFn, openLg })
     try {
       setLoading(true)
       const values = await form.validateFields()
-      const { senha } = values
-      const response = await axios.put(`http://localhost:3003/usuario/${usuarioLogado.id}/senha`, { senha })
-      messageApi.success(response.data.message)
-      closeFn()
-      openLg()
+      let response
+      if (card) {
+        response = await axios.put(`http://localhost:3003/cartao/${card?.id}`, values)
+      } else {
+        response = await axios.post(`http://localhost:3003/cartao/${usuarioLogado.id}`, values)
+      }
+      messageApi.success(response?.data?.message)
+      handleCancel()
     } catch (error) {
-      messageApi.error(error)
+      messageApi.error('Não foi possível salvar o cartão.')
     } finally {
       setLoading(false)
     }
-  }, [closeFn, form, messageApi, openLg, usuarioLogado.id])
+  }, [form, card, messageApi, handleCancel, usuarioLogado.id])
+
+  useEffect(() => {
+    if (card) form.setFieldsValue(card)
+  }, [card, form])
 
   return (
     <Modal
@@ -48,84 +54,76 @@ export const ModalGerenciarCartao = ({ action, card, visible, closeFn, openLg })
         layout='vertical' 
         size='middle'
       >
-        <Row>
+        <Row gutter={[8,8]}>
           <Col span={24}>
             <Form.Item
-              name='senha'
-              label='Senha'
+              name='numero'
+              label='Número'
               hasFeedback
               required
               rules={[
                 { 
                   required: true, 
-                  message: 'Obrigatório preencher Senha' 
-                },
-                () => ({
-                  validator(_, value) {
-                    if (!value) {
-                      return Promise.resolve();
-                    }
-                    if (value.length < 8) {
-                      return Promise.reject(
-                        new Error(
-                          "Uma Senha segura precisa de no mínimo de 8 caracteres!"
-                        )
-                      );
-                    }
-                    if (
-                      value.includes("1") === false &&
-                      value.includes("2") === false &&
-                      value.includes("3") === false &&
-                      value.includes("4") === false &&
-                      value.includes("5") === false &&
-                      value.includes("6") === false &&
-                      value.includes("7") === false &&
-                      value.includes("8") === false &&
-                      value.includes("9") === false &&
-                      value.includes("0") === false
-                    ) {
-                      return Promise.reject(
-                        new Error(
-                          "Uma Senha segura precisa conter ao menos um número!"
-                        )
-                      );
-                    }
-                      return Promise.resolve();
-                  },
-                })
+                  message: 'Obrigatório preencher Número' 
+                }
               ]}
             >
-              <Input.Password
-                placeholder='Digite sua Senha'
+              <Input
+                placeholder='Digite o Número'
               />
             </Form.Item>
           </Col>
           <Col span={24}>
             <Form.Item
-              name='confirmarSenha'
-              label='Confirmar Senha'
+              name='nome'
+              label='Nome'
               hasFeedback
               required
               rules={[
                 { 
                   required: true, 
-                  message: 'Obrigatório preencher Confirmar Senha' 
-                },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue('senha') === value) {
-                      return Promise.resolve()
-                    }
-                    if (value.length >= getFieldValue('senha').length  && getFieldValue('senha') !== value) {
-                      return Promise.reject(new Error('Os campos Senha e Confirmar Senha não estão iguais!'))
-                    }
-                    return Promise.resolve()
-                  }
-                })
+                  message: 'Obrigatório preencher Nome' 
+                }
               ]}
             >
-              <Input.Password
-                placeholder='Confirme sua Senha'
+              <Input
+                placeholder='Digite o Nome no Cartão'
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='codigo'
+              label='Código'
+              hasFeedback
+              required
+              rules={[
+                { 
+                  required: true, 
+                  message: 'Obrigatório preencher Código' 
+                }
+              ]}
+            >
+              <Input
+                placeholder='Digite o Código'
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='validade'
+              label='Validade'
+              hasFeedback
+              required
+              rules={[
+                { 
+                  required: true, 
+                  message: 'Obrigatório preencher Validade' 
+                }
+              ]}
+            >
+              <Input
+                placeholder='Digite a Validade'
               />
             </Form.Item>
           </Col>
@@ -139,6 +137,5 @@ ModalGerenciarCartao.propTypes = {
   action: PropTypes.string.isRequired,
   card: PropTypes.any,
   visible: PropTypes.bool.isRequired,
-  closeFn: PropTypes.func.isRequired,
-  openLg: PropTypes.func.isRequired
+  closeFn: PropTypes.func.isRequired
 }
