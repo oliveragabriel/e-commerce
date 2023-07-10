@@ -1,12 +1,13 @@
 import { useMemo } from "react"
 import { useNavigate } from 'react-router-dom'
-import { Button, Col, Row } from "antd"
+import { Button, Col, message, Row } from "antd"
 import { useControleUsuarioContext } from "../../../../hooks/useControleUsuarioContext"
 import { ContainerProdutoSelecionado } from "./ContainerProdutoSelecionado"
 import { converteValorInteiroParaValorMonetario } from "../../../../functions";
 
 export const ContainerCarrinhoDeCompras = () => {
-    const { produtosSelecionadosParaCompra } = useControleUsuarioContext()
+    const { produtosSelecionadosParaCompra, usuarioLogado } = useControleUsuarioContext()
+    const [messageApi, contextHolder] = message.useMessage()
     const navigate = useNavigate()
   
     const resultadoSomaTodosProdutos = useMemo(() => {
@@ -22,6 +23,7 @@ export const ContainerCarrinhoDeCompras = () => {
   
     return (
       <Row className="carrinho-de-compras" style={{ width: 295 }}>
+        {contextHolder}
         <Col span={24}>
           {produtosSelecionadosParaCompra.map((produto, index) => (
             <ContainerProdutoSelecionado
@@ -36,7 +38,7 @@ export const ContainerCarrinhoDeCompras = () => {
           <div style={{ marginLeft: 14 }}>R$ {resultadoSomaTodosProdutos}</div>
         </Col>
         <Col span={24} style={{ margin: '12px' }}>
-          <Button type='primary' style={{ width: 268 }} onClick={() => navigate('finalizar-compra')}>
+          <Button type='primary' style={{ width: 268 }} onClick={() => usuarioLogado.id ? navigate('finalizar-compra') : messageApi.error('Para concluir um pedido você precisa estar logado.')}>
             Concluir Pedido
           </Button>
         </Col>

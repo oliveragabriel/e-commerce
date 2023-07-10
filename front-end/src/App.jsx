@@ -51,7 +51,7 @@ function App() {
           <Layout.Footer>
             <Row justify='space-between'>
               <Col style={{ display: 'flex', alignItems: 'center' }}>
-                <p style={{ fontWeight: 600 }}> Desenvolvido por Gabriel Olivera @2023</p>
+                <p style={{ fontWeight: 600 }}> Copyright © 2023 | Gabriel Olivera | All Rights Reserved</p>
               </Col>
               <Col>
                 <img height='50vh' src={logoHorizontal} />
