@@ -13,9 +13,7 @@ const StyledCol = styled(Col)`
 
 export const ContainerProdutoSelecionado = ({ produto, index }) => {
   const { produtosSelecionadosParaCompra, setProdutosSelecionadosParaCompra } = useControleUsuarioContext()
-  console.log("🚀 ~ ContainerProdutoSelecionado ~ produtosSelecionadosParaCompra:", produtosSelecionadosParaCompra)
   const { nome, valor, id } = produto
-  console.log("🚀 ~ ContainerProdutoSelecionado ~ produto:", produto)
 
   const removeProdutoSelecionadoParaCompra = useCallback(() => {
     const listaSemProdutoRemovido = produtosSelecionadosParaCompra.filter((p) => p.id !== id)

@@ -1,17 +1,18 @@
-import { Card, ConfigProvider as AntdConfigProvider, Layout, theme } from 'antd'
+import './reset.css'
 import ptBR from 'antd/es/locale/pt_BR'
 import { Header } from './layout/Header/Header'
-import { ControleUsuarioContextProvider } from './context/ControleUsuarioContextProvider'
 import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Home } from './Home'
 import { MeuPerfil } from './MeuPerfil'
-import './reset.css'
-import { MeusEnderecos } from './MeusEnderecos'
 import { MeusPedidos } from './MeusPedidos'
 import { MeusCartoes } from './MeusCartoes'
+import { MeusEnderecos } from './MeusEnderecos'
 import { MeusFavoritos } from './MeusFavoritos'
-import { Home } from './Home'
+import { MinhaCompra } from './MinhaCompra'
 import { GerenciarProdutos } from './GerenciarProdutos'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ControleUsuarioContextProvider } from './context/ControleUsuarioContextProvider'
+import { Card, ConfigProvider as AntdConfigProvider, Layout, theme } from 'antd'
 
 function App() {
   const [systemAtDarkMode, setSystemAtDarkMode] = useState(true)
@@ -42,6 +43,7 @@ function App() {
                   <Route path="/compras" element={<MeusPedidos />} />
                   <Route path="/favoritos" element={<MeusFavoritos/>} />
                   <Route path="/produtos" element={<GerenciarProdutos />} />
+                  <Route path="/finalizar-compra" element={<MinhaCompra />} />
               </Routes>
             </Card>
           </Layout.Content>

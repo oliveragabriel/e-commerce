@@ -1,11 +1,13 @@
-import { Button, Col, Row } from "antd"
 import { useMemo } from "react"
-import { converteValorInteiroParaValorMonetario } from "../../../../functions";
+import { useNavigate } from 'react-router-dom'
+import { Button, Col, Row } from "antd"
 import { useControleUsuarioContext } from "../../../../hooks/useControleUsuarioContext"
 import { ContainerProdutoSelecionado } from "./ContainerProdutoSelecionado"
+import { converteValorInteiroParaValorMonetario } from "../../../../functions";
 
 export const ContainerCarrinhoDeCompras = () => {
     const { produtosSelecionadosParaCompra } = useControleUsuarioContext()
+    const navigate = useNavigate()
   
     const resultadoSomaTodosProdutos = useMemo(() => {
       const valorTotalParaPedido = produtosSelecionadosParaCompra.reduce(
@@ -34,7 +36,7 @@ export const ContainerCarrinhoDeCompras = () => {
           <div style={{ marginLeft: 14 }}>R$ {resultadoSomaTodosProdutos}</div>
         </Col>
         <Col span={24} style={{ margin: '12px' }}>
-          <Button type='primary' style={{ width: 268 }}>
+          <Button type='primary' style={{ width: 268 }} onClick={() => navigate('finalizar-compra')}>
             Concluir Pedido
           </Button>
         </Col>
