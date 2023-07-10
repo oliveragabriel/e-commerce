@@ -9,6 +9,7 @@ export function ControleUsuarioContextProvider ({ children }) {
     const [listaComTodosPaises, setListaComTodosPaises] = useState([])
     const [listaComTodosEstados, setListaComTodosEstados] = useState([])
     const [listaComTodasCategorias, setListaComTodasCategorias] = useState([])
+    const [listaComProdutosFavoritos, setListaComProdutosFavoritos] = useState([])
 
     useEffect(() => {
       if (!usuarioLogado?.id) {
@@ -27,11 +28,13 @@ export function ControleUsuarioContextProvider ({ children }) {
         listaComTodosPaises,
         listaComTodasCategorias,
         produtosSelecionadosParaCompra,
+        listaComProdutosFavoritos,
         setUsuarioLogado,
         setListaComTodosEstados,
         setListaComTodosPaises,
         setListaComTodasCategorias,
-        setProdutosSelecionadosParaCompra
+        setProdutosSelecionadosParaCompra,
+        setListaComProdutosFavoritos
       }}
     >
       {children}
