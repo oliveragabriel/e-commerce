@@ -62,7 +62,7 @@ export const MeusFavoritos = () => {
   
 
   return (
-    <div style={{ minHeight: '86.1vh', marginTop: '52px', padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
+    <div style={{ minHeight: '75.9vh', marginTop: '52px', padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
       {contextHolder}
       <Row gutter={[24,24]}>
         <Col span={24}>

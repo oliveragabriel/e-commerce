@@ -12,7 +12,8 @@ import { MinhaCompra } from './MinhaCompra'
 import { GerenciarProdutos } from './GerenciarProdutos'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ControleUsuarioContextProvider } from './context/ControleUsuarioContextProvider'
-import { Card, ConfigProvider as AntdConfigProvider, Layout, theme } from 'antd'
+import { Card, Col, ConfigProvider as AntdConfigProvider, Layout, Row, theme } from 'antd'
+import logoHorizontal from './assets/images/logo-horizontal.png'
 
 function App() {
   const [systemAtDarkMode, setSystemAtDarkMode] = useState(true)
@@ -47,6 +48,16 @@ function App() {
               </Routes>
             </Card>
           </Layout.Content>
+          <Layout.Footer>
+            <Row justify='space-between'>
+              <Col style={{ display: 'flex', alignItems: 'center' }}>
+                <p style={{ fontWeight: 600 }}> Desenvolvido por Gabriel Olivera @2023</p>
+              </Col>
+              <Col>
+                <img height='50vh' src={logoHorizontal} />
+              </Col>
+            </Row>
+          </Layout.Footer>
         </ControleUsuarioContextProvider>
       </AntdConfigProvider>
     </BrowserRouter>

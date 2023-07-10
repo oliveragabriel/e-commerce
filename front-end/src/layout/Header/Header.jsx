@@ -9,6 +9,7 @@ import { BtnChangeTheme } from './components/BtnChangeTheme/BtnChangeTheme'
 import PropTypes from 'prop-types'
 import { itemsMenu } from './itemsMenu'
 import { useCallback } from 'react'
+import logoVertical from '../../assets/images/logo-vertical.png'
 
 const StyledMenu = styled(Menu)`
   border-radius: 30px;

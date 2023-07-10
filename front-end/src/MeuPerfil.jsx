@@ -6,7 +6,7 @@ import { HiOutlineIdentification } from 'react-icons/hi'
 import { BsTelephone } from 'react-icons/bs'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 import { ModalGerenciarSenha } from './Modal/GerenciarSenha/GerenciarSenha'
-import { Typography } from 'antd';
+import { Typography } from 'antd'
 
 const { Title } = Typography;
 
@@ -72,7 +72,7 @@ export const MeuPerfil = () => {
   
 
   return (
-    <div style={{ minHeight: '86.1vh' , marginTop: '52px', padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
+    <div style={{ minHeight: '75.9vh' , marginTop: '52px', padding: 16, border: '1px solid #d8dcd6', borderRadius: 6 }}>
       {contextHolder}
       <Form 
         form={form} 
