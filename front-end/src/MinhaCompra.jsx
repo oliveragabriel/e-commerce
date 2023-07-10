@@ -20,13 +20,23 @@ export const MinhaCompra = () => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([])
 
-  const rowSelection = {
+  const rowSelectionEndereco = {
     hideSelectAll: true,
     onSelect: (record, selected, selectedRows) => {
       console.log(record, selected, selectedRows);
     },
     onSelectMultiple: () => {
-      messageApi.error('Selecione apenas 1 cartão para finalizar a compra.')
+      messageApi.error('Selecione apenas 1 endereço!')
+    }
+  }
+
+  const rowSelectionCartao = {
+    hideSelectAll: true,
+    onSelect: (record, selected, selectedRows) => {
+      console.log(record, selected, selectedRows);
+    },
+    onSelectMultiple: () => {
+      messageApi.error('Selecione apenas 1 cartão!')
     }
   }
 
@@ -91,7 +101,7 @@ export const MinhaCompra = () => {
                 description: (
                   <Table
                     rowKey='id'
-                    rowSelection={{ ...rowSelection }}
+                    rowSelection={{ ...rowSelectionEndereco }}
                     loading={loading}
                     columns={[
                       {
@@ -141,10 +151,11 @@ export const MinhaCompra = () => {
               },
               {
                 title: 'Escolha o cartão para cobrança',
+                disabled: true,
                 description: (
                   <Table
                     rowKey='id'
-                    rowSelection={{ ...rowSelection }}
+                    rowSelection={{ ...rowSelectionCartao }}
                     loading={loading}
                     columns={[
                       {
@@ -168,6 +179,7 @@ export const MinhaCompra = () => {
                     pagination={false}
                     footer={() => (
                       <Button
+                        disabled
                         onClick={() => navigate('/cartoes')}
                       >
                         Gerenciar cartões
@@ -179,6 +191,7 @@ export const MinhaCompra = () => {
               },
               {
                 title: 'Confira a lista de produtos selecionados',
+                disabled: true,
                 description: (
                   <Table
                     rowKey='id'
@@ -229,7 +242,8 @@ export const MinhaCompra = () => {
                               <Col>
                                 <Button 
                                   type="text"
-                                  title="Remover do Carrinho"
+                                  title="Remover"
+                                  disabled
                                   icon={<DeleteFilled style={{color: '#ff4d4f'}} />}  
                                   onClick={() => removeProdutoSelecionadoParaCompra(record.id)}
                                 />
@@ -259,6 +273,7 @@ export const MinhaCompra = () => {
               <Button
                 size='large'
                 type='primary'
+                disabled
                 onClick={() => navigate('/cartoes')}
               >
                 Confirmar compra
