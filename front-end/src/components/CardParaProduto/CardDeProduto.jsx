@@ -13,8 +13,8 @@ export const CardDeProduto = ({ p, idx, dlt, fvt }) => {
 
   const handleAdicionaParaCarrinhoDeCompra = useCallback(() => {
     const produtoJaFoiSelecionado = produtosSelecionadosParaCompra.filter((pdt) => pdt.id === (p.idProduto ?? p.id))
-    if (produtoJaFoiSelecionado) {
-      return messageApi.error('O produto já está favoritado.')
+    if (produtoJaFoiSelecionado.length > 0) {
+      return messageApi.error('O produto já foi selecionado para compra.')
     } else {
       const produtosSelecionadosAntes = produtosSelecionadosParaCompra
       const novaListaProdutosSelecionados = [ ...produtosSelecionadosAntes, { ...p, id: p.idProduto ?? p.id, nome: p.produto } ]

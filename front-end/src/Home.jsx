@@ -8,7 +8,7 @@ import { useControleUsuarioContext } from "./hooks/useControleUsuarioContext"
 
 export const Home = () => {
   const [messageApi, contextHolder] = message.useMessage()
-  const { usuarioLogado, listaComProdutosFavoritos, setListaComProdutosFavoritos } = useControleUsuarioContext()
+  const { usuarioLogado } = useControleUsuarioContext()
   const [loading, setLoading] = useState(false)
   const [screenHeight, setScreenHeight] = useState(0)
   const [listaComTodosProdutos, setListaComTodosProdutos] = useState([])
@@ -44,18 +44,12 @@ export const Home = () => {
 
   const handleAdicionarProdutoComoFavorito = useCallback(async (idProduto) => {
     try {
-      const produtoJaFoiFavoritado = listaComProdutosFavoritos.filter((pdt) => pdt.id === idProduto)
-      if (produtoJaFoiFavoritado) {
-        return messageApi.error('O produto já está favoritado.')
-      } else {
-        setListaComProdutosFavoritos(idProduto)
-        const response = await axios.post(`http://localhost:3003/favoritos/${idProduto}/usuario/${usuarioLogado.id}`)
-        messageApi.success(response?.data?.message)
-      }
+      const response = await axios.post(`http://localhost:3003/favoritos/${idProduto}/usuario/${usuarioLogado.id}`)
+      messageApi.success(response?.data?.message)
     } catch (error) {
       messageApi.error('Erro ao salvar o produto como favorito.')
     }
-  }, [listaComProdutosFavoritos, messageApi, setListaComProdutosFavoritos, usuarioLogado.id])
+  }, [messageApi, usuarioLogado.id])
 
   const handleResizeBanner = useCallback(() => {
     setScreenHeight(window.innerHeight)
