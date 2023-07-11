@@ -112,7 +112,7 @@ export const ModalAdicionarProduto = ({ visible, closeFn }) => {
                 }}
               >
                 {imagemFotoUrl ? <img src={imagemFotoUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-              </Upload>ModalAdicionarProduto
+              </Upload>
             </Form.Item>
           </Col>
           <Col span={8}>
