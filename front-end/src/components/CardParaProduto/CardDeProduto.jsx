@@ -1,4 +1,4 @@
-import { Button, Card } from "antd"
+import { Button, Card, message } from "antd"
 import { converteValorInteiroParaValorMonetario, recortaTextoParaExibirCompactado } from "../../functions"
 import { CardImagemContainer } from "./CardImagemContainer"
 import PropTypes from 'prop-types'
@@ -9,12 +9,18 @@ const { Meta } = Card
 
 export const CardDeProduto = ({ p, idx, dlt, fvt }) => {
   const { produtosSelecionadosParaCompra, setProdutosSelecionadosParaCompra } = useControleUsuarioContext()
+  const [messageApi, contextHolder] = message.useMessage()
 
   const handleAdicionaParaCarrinhoDeCompra = useCallback(() => {
-    const produtosSelecionadosAntes = produtosSelecionadosParaCompra
-    const novaListaProdutosSelecionados = [ ...produtosSelecionadosAntes, { ...p, id: p.idProduto ?? p.id, nome: p.produto } ]
-    setProdutosSelecionadosParaCompra(novaListaProdutosSelecionados)
-  }, [p, produtosSelecionadosParaCompra, setProdutosSelecionadosParaCompra])
+    const produtoJaFoiSelecionado = produtosSelecionadosParaCompra.filter((pdt) => pdt.id === (p.idProduto ?? p.id))
+    if (produtoJaFoiSelecionado) {
+      return messageApi.error('O produto já está favoritado.')
+    } else {
+      const produtosSelecionadosAntes = produtosSelecionadosParaCompra
+      const novaListaProdutosSelecionados = [ ...produtosSelecionadosAntes, { ...p, id: p.idProduto ?? p.id, nome: p.produto } ]
+      setProdutosSelecionadosParaCompra(novaListaProdutosSelecionados)
+    }
+  }, [messageApi, p, produtosSelecionadosParaCompra, setProdutosSelecionadosParaCompra])
   
   return (
     <Card
@@ -31,6 +37,7 @@ export const CardDeProduto = ({ p, idx, dlt, fvt }) => {
           </div>
         } 
       />
+      {contextHolder}
       <div 
         style={{ 
           display: 'flex',
