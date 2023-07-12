@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Divider, Image, Steps, Typography } from 'antd'
+import { Image, Steps, Typography } from 'antd'
 import { DeleteFilled } from '@ant-design/icons'
 import { useControleUsuarioContext } from './hooks/useControleUsuarioContext'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -18,25 +18,29 @@ export const MinhaCompra = () => {
   const [cartoes, setCartoes] = useState([])
   const [enderecos, setEnderecos] = useState([])
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const [enderecoSelecionado, setEnderecoSelecionado] = useState()
+  const [cartaoSelecionado, setCartaoSelecionado] = useState()
 
   const rowSelectionEndereco = {
     hideSelectAll: true,
-    onSelect: (record, selected, selectedRows) => {
-      console.log(record, selected, selectedRows);
-    },
-    onSelectMultiple: () => {
-      messageApi.error('Selecione apenas 1 endereço!')
+    type: 'radio',
+    onSelect: (record) => {
+      setEnderecoSelecionado(record)
     }
   }
 
   const rowSelectionCartao = {
     hideSelectAll: true,
-    onSelect: (record, selected, selectedRows) => {
-      console.log(record, selected, selectedRows);
-    },
-    onSelectMultiple: () => {
-      messageApi.error('Selecione apenas 1 cartão!')
+    type: 'radio',
+    getCheckboxProps: () => ({
+      disabled: !enderecoSelecionado,
+    }),
+    onSelect: (record) => {
+      if (!enderecoSelecionado) {
+        return messageApi.error('Selecione um endereço para entrega.')
+      } else {
+        setCartaoSelecionado(record)
+      }
     }
   }
 
@@ -64,6 +68,21 @@ export const MinhaCompra = () => {
     }
   }, [messageApi, usuarioLogado.id])
 
+  const confirmaCompraParaUsuario = useCallback(async () => {
+    try {
+      setLoading(true)
+      for (const produto of produtosSelecionadosParaCompra) {
+        await axios.post(`http://localhost:3003/compras/${usuarioLogado.id}`, { ...produto, cartao: cartaoSelecionado, endereco: enderecoSelecionado })
+      }
+      messageApi.success('Sua compra foi finalizada com sucesso.')
+      navigate('/compras')
+    } catch (error) {
+      messageApi.error('Não foi possível confirmar sua compra.')
+    } finally {
+      setLoading(false)
+    }
+  }, [cartaoSelecionado, enderecoSelecionado, messageApi, navigate, produtosSelecionadosParaCompra, usuarioLogado.id])
+
   const getEnderecoPorUsuario = useCallback(async () => {
     try {
       setLoading(true)
@@ -79,6 +98,15 @@ export const MinhaCompra = () => {
     }
   }, [messageApi, usuarioLogado.id])
 
+  const stepAtual = useMemo(() => {
+    if (cartaoSelecionado) {
+      return 2
+    }
+    if (enderecoSelecionado) {
+      return 1
+    }
+  }, [cartaoSelecionado, enderecoSelecionado])
+
   useEffect(() => {
     getCartoesPorUsuario()
     getEnderecoPorUsuario()
@@ -93,7 +121,7 @@ export const MinhaCompra = () => {
           </Col>
           <Col span={24}>
           <Steps
-            current={0}
+            current={stepAtual}
             direction="vertical"
             items={[
               {
@@ -179,7 +207,7 @@ export const MinhaCompra = () => {
                     pagination={false}
                     footer={() => (
                       <Button
-                        disabled
+                        disabled={!enderecoSelecionado}
                         onClick={() => navigate('/cartoes')}
                       >
                         Gerenciar cartões
@@ -243,7 +271,7 @@ export const MinhaCompra = () => {
                                 <Button 
                                   type="text"
                                   title="Remover"
-                                  disabled
+                                  disabled={!enderecoSelecionado && !cartaoSelecionado}
                                   icon={<DeleteFilled style={{color: '#ff4d4f'}} />}  
                                   onClick={() => removeProdutoSelecionadoParaCompra(record.id)}
                                 />
@@ -273,8 +301,8 @@ export const MinhaCompra = () => {
               <Button
                 size='large'
                 type='primary'
-                disabled
-                onClick={() => navigate('/cartoes')}
+                disabled={!cartaoSelecionado}
+                onClick={confirmaCompraParaUsuario}
               >
                 Confirmar compra
               </Button>
