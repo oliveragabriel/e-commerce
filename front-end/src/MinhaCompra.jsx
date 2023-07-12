@@ -74,6 +74,7 @@ export const MinhaCompra = () => {
       for (const produto of produtosSelecionadosParaCompra) {
         await axios.post(`http://localhost:3003/compras/${usuarioLogado.id}`, { idProduto: produto.id, idVendedor: produto.vendedor, valor: produto.valor, idCartao: cartaoSelecionado.id, idEndereco: enderecoSelecionado.id })
       }
+      setProdutosSelecionadosParaCompra([])
       messageApi.success('Sua compra foi finalizada com sucesso.')
       navigate('/compras')
     } catch (error) {
@@ -81,7 +82,7 @@ export const MinhaCompra = () => {
     } finally {
       setLoading(false)
     }
-  }, [cartaoSelecionado, enderecoSelecionado, messageApi, navigate, produtosSelecionadosParaCompra, usuarioLogado.id])
+  }, [cartaoSelecionado?.id, enderecoSelecionado?.id, messageApi, navigate, produtosSelecionadosParaCompra, setProdutosSelecionadosParaCompra, usuarioLogado?.id])
 
   const getEnderecoPorUsuario = useCallback(async () => {
     try {
