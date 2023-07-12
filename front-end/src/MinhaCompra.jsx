@@ -72,7 +72,7 @@ export const MinhaCompra = () => {
     try {
       setLoading(true)
       for (const produto of produtosSelecionadosParaCompra) {
-        await axios.post(`http://localhost:3003/compras/${usuarioLogado.id}`, { ...produto, cartao: cartaoSelecionado, endereco: enderecoSelecionado })
+        await axios.post(`http://localhost:3003/compras/${usuarioLogado.id}`, { idProduto: produto.id, idVendedor: produto.vendedor, valor: produto.valor, idCartao: cartaoSelecionado.id, idEndereco: enderecoSelecionado.id })
       }
       messageApi.success('Sua compra foi finalizada com sucesso.')
       navigate('/compras')

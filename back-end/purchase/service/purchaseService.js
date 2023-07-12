@@ -11,9 +11,9 @@ exports.listPurchaseByUserId = (idUsuario) => {
     });
 };
 
-exports.postAddNewPurchase = async (idProduto, idVendedor, idUsuario, valor) => {
+exports.postAddNewPurchase = async (idProduto, idVendedor, idUsuario, valor, idCartao, idEndereco) => {
   const values = [idProduto, idVendedor, idUsuario, valor];
-  return await database.query(userQueries.postAddNewPurchase, values)
+  return await database.query(purchaseQueries.postAddNewPurchase, values)
     .then((result) => result.rows)
     .catch((error) => {
       throw error;
